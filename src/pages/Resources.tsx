@@ -1,0 +1,310 @@
+import React, { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
+import { FileText, Download, User, Mail } from 'lucide-react'
+import { supabase } from '../lib/supabase'
+
+interface Resource {
+  id: string
+  title: string
+  description: string
+  file_url: string
+  created_at: string
+}
+
+const Resources = () => {
+  const [resources, setResources] = useState<Resource[]>([])
+  const [loading, setLoading] = useState(true)
+  const [selectedResource, setSelectedResource] = useState<Resource | null>(null)
+  const [showForm, setShowForm] = useState(false)
+  const [formData, setFormData] = useState({
+    name: '',
+    email: ''
+  })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  // Default resources (buyer and seller guides)
+  const defaultResources: Resource[] = [
+    {
+      id: 'buyers-guide',
+      title: 'Your Guide to Buying a Home in the Phoenix Valley',
+      description: 'Process overview, financing options, timeline, and essential tips for home buyers.',
+      file_url: "/Buyers_Guide.pdf",
+      created_at: new Date().toISOString()
+    },
+    {
+      id: 'sellers-guide',
+      title: 'Your Guide to Selling Your Phoenix Valley Home',
+      description: 'Pricing strategies, preparation, staging, marketing, and handling offers.',
+      file_url: "/Sellers_Guide.pdf",
+      created_at: new Date().toISOString()
+    },
+    {
+      id: 'staging-checklist',
+      title: 'Staging Checklist - Make Your Home Show-Ready',
+      description: 'Room-by-room preparation tips to maximize your home\'s appeal to potential buyers.',
+      file_url: "/Staging_Checklist.pdf",
+      created_at: new Date().toISOString()
+    },
+    {
+      id: 'monsoon-prep',
+      title: 'Monsoon Prep Tips - Protecting Your Phoenix Home',
+      description: 'Essential maintenance for roof/gutters, yard, AC, and flood safety during monsoon season.',
+      file_url: "/Monsoon_Prep_Tips.pdf",
+      created_at: new Date().toISOString()
+    }
+  ]
+
+  useEffect(() => {
+    const fetchResources = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('resources')
+          .select('*')
+          .order('created_at', { ascending: false })
+
+        if (error) throw error
+        
+        // Combine default resources with those from the database
+        setResources([...defaultResources, ...(data || [])])
+      } catch (error) {
+        console.error('Error fetching resources:', error)
+        // Fallback to just the default resources if there's an error
+        setResources(defaultResources)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchResources()
+  }, [])
+
+  const handleDownloadClick = (resource: Resource) => {
+    setSelectedResource(resource)
+    setShowForm(true)
+  }
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+
+    try {
+      // Save lead to database
+      const { error } = await supabase
+        .from('leads')
+        .insert([
+          {
+            name: formData.name,
+            email: formData.email,
+            message: `Downloaded resource: ${selectedResource?.title}`
+          }
+        ])
+
+      if (error) throw error
+
+      // Simulate file download
+      const link = document.createElement('a')
+      link.href = selectedResource?.file_url || '#'
+      link.download = selectedResource?.title || 'resource'
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+
+      // Reset form and close modal
+      setFormData({ name: '', email: '' })
+      setShowForm(false)
+      setSelectedResource(null)
+    } catch (error) {
+      console.error('Error submitting form:', error)
+      alert('There was an error processing your request. Please try again.')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }))
+  }
+
+  if (loading) {
+    return (
+      <div className="py-24 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="animate-pulse">
+            <div className="h-12 bg-gray-200 rounded w-1/2 mx-auto mb-4"></div>
+            <div className="h-6 bg-gray-200 rounded w-1/3 mx-auto mb-8"></div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="bg-gray-200 h-64 rounded-2xl"></div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="py-24 px-6">
+      <div className="max-w-7xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-16"
+        >
+          <h1 className="text-6xl font-bold text-[#333333] mb-6 font-serif">Helpful Resources</h1>
+          <p className="text-xl text-[#555555] max-w-3xl mx-auto">
+            Download free guides, checklists, and reports to help you navigate the Phoenix Valley real estate market with confidence.
+          </p>
+        </motion.div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {resources.map((resource, index) => (
+            <motion.div
+              key={resource.id}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+              className="bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 hover:scale-105 text-center"
+            >
+              <div className="bg-[#2A9D8F]/10 w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-6">
+                <FileText size={28} className="text-[#2A9D8F]" />
+              </div>
+              <h3 className="text-xl font-bold text-[#333333] mb-4">{resource.title}</h3>
+              <p className="text-[#555555] mb-6 leading-relaxed">{resource.description}</p>
+              <button
+                onClick={() => handleDownloadClick(resource)}
+                className="bg-[#E76F51] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#E76F51]/90 transition-colors flex items-center justify-center mx-auto"
+              >
+                <Download size={20} className="mr-2" />
+                Download Free
+              </button>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Download Form Modal */}
+        {showForm && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-6">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white rounded-2xl p-8 max-w-md w-full"
+            >
+              <h3 className="text-2xl font-bold text-[#333333] mb-4 font-serif">
+                Download: {selectedResource?.title}
+              </h3>
+              <p className="text-[#555555] mb-6">
+                Please provide your contact information to download this free resource.
+              </p>
+              
+              <form onSubmit={handleFormSubmit} className="space-y-4">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-[#333333] mb-2">
+                    Full Name *
+                  </label>
+                  <div className="relative">
+                    <User size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#555555]" />
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2A9D8F] focus:border-transparent"
+                      placeholder="Your full name"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-[#333333] mb-2">
+                    Email Address *
+                  </label>
+                  <div className="relative">
+                    <Mail size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#555555]" />
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#2A9D8F] focus:border-transparent"
+                      placeholder="your.email@example.com"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex space-x-4 pt-4">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowForm(false)
+                      setSelectedResource(null)
+                      setFormData({ name: '', email: '' })
+                    }}
+                    className="flex-1 px-6 py-3 border border-gray-200 text-[#555555] rounded-xl font-semibold hover:bg-gray-50 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="flex-1 bg-[#E76F51] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#E76F51]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                  >
+                    {isSubmitting ? (
+                      'Downloading...'
+                    ) : (
+                      <>
+                        <Download size={20} className="mr-2" />
+                        Download
+                      </>
+                    )}
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </div>
+        )}
+
+        {/* Additional Info Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="mt-24"
+        >
+          <div className="bg-[#FAF9F6] p-12 rounded-2xl text-center">
+            <h2 className="text-3xl font-bold text-[#333333] mb-6 font-serif">Need More Information?</h2>
+            <p className="text-lg text-[#555555] mb-8 max-w-2xl mx-auto">
+              These resources are just the beginning. I'm here to provide personalized guidance and answer any questions you have about buying, selling, or investing in Phoenix Valley real estate.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <a
+                href="tel:(480)555-0123"
+                className="bg-[#2A9D8F] text-white px-8 py-4 rounded-xl font-semibold uppercase tracking-wide hover:bg-[#2A9D8F]/90 transition-all duration-200 hover:scale-105 shadow-lg"
+              >
+                Call Me: (480) 555-0123
+              </a>
+              <a
+                href="mailto:lara@blissrealty.com"
+                className="bg-[#E76F51] text-white px-8 py-4 rounded-xl font-semibold uppercase tracking-wide hover:bg-[#E76F51]/90 transition-all duration-200 hover:scale-105 shadow-lg"
+              >
+                Email: lara@blissrealty.com
+              </a>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </div>
+  )
+}
+
+export default Resources
