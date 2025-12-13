@@ -10,45 +10,16 @@ const SearchBar = () => {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, delay: 0.2 }}
-      className="bg-white p-8 rounded-2xl shadow-md max-w-4xl mx-auto mb-16"
+      className="flex justify-center mb-16"
     >
-      <div className="grid md:grid-cols-4 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-[#333333] mb-2">Price Range</label>
-          <select className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E76F51] focus:border-transparent">
-            <option>Any Price</option>
-            <option>Under $300K</option>
-            <option>$300K - $500K</option>
-            <option>$500K - $750K</option>
-            <option>$750K+</option>
-          </select>
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-[#333333] mb-2">Bedrooms</label>
-          <select className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E76F51] focus:border-transparent">
-            <option>Any</option>
-            <option>1+</option>
-            <option>2+</option>
-            <option>3+</option>
-            <option>4+</option>
-          </select>
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-[#333333] mb-2">Bathrooms</label>
-          <select className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E76F51] focus:border-transparent">
-            <option>Any</option>
-            <option>1+</option>
-            <option>2+</option>
-            <option>3+</option>
-          </select>
-        </div>
-        <div className="flex items-end">
-          <button className="w-full bg-[#E76F51] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#E76F51]/90 transition-colors flex items-center justify-center">
-            <Search size={20} className="mr-2" />
-            Search
-          </button>
-        </div>
-      </div>
+      <a
+        href="https://search.blissrealtyinvestment.com/idx/search/advanced?agentHeaderID=15891149"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-block bg-[#E76F51] text-white px-12 py-4 rounded-xl font-semibold uppercase tracking-wide hover:bg-[#E76F51]/90 transition-all duration-200 hover:scale-105 shadow-lg"
+      >
+        Search Homes for Sale
+      </a>
     </motion.div>
   )
 }
