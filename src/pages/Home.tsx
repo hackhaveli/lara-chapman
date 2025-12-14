@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowRight, Home as HomeIcon, DollarSign, Palette, TrendingUp, ChevronLeft, ChevronRight, Volume2, VolumeX } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import { usePageContent } from '../hooks/usePageContent'
 
 // Declare YouTube Player API type
 declare global {
@@ -13,13 +14,17 @@ declare global {
 }
 
 const Hero = () => {
-  const [isMuted, setIsMuted] = useState(true); // Default to muted for autoplay
+  const [isMuted, setIsMuted] = useState(true);
   const playerRef = useRef<any>(null);
   const videoContainerRef = useRef<HTMLDivElement>(null);
+  const { content } = usePageContent();
+
+  // Get dynamic content with fallbacks
+  const heroTitle = content?.home?.heroTitle || "I'm Lara Chapman, Realtor® with Bliss Realty.";
+  const heroSubtitle = content?.home?.heroSubtitle || "Realtor®, investor, and home stager helping Phoenix Valley clients buy and sell with confidence.";
 
   useEffect(() => {
     const initPlayer = () => {
-      // If player already exists, don't recreate
       if (playerRef.current) return;
 
       playerRef.current = new window.YT.Player('youtube-player', {
@@ -30,21 +35,20 @@ const Hero = () => {
           disablekb: 1,
           loop: 1,
           modestbranding: 1,
-          mute: 1, // Muted by default to allow autoplay
+          mute: 1,
           showinfo: 0,
           rel: 0,
           fs: 0,
           iv_load_policy: 3,
           playsinline: 1,
           start: 0,
-          playlist: 'DZfp99BamQk' // Required for loop: 1 to work
+          playlist: 'DZfp99BamQk'
         },
         events: {
           onReady: (event: any) => {
             event.target.playVideo();
           },
           onStateChange: (event: any) => {
-            // Ensure video loops
             if (event.data === window.YT.PlayerState.ENDED) {
               event.target.playVideo();
             }
@@ -54,26 +58,21 @@ const Hero = () => {
     };
 
     if (!window.YT) {
-      // Load YouTube IFrame API script if not already loaded
       const tag = document.createElement('script');
       tag.src = 'https://www.youtube.com/iframe_api';
       const firstScriptTag = document.getElementsByTagName('script')[0];
       firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
 
-      // Initialize YouTube player when API is ready
       window.onYouTubeIframeAPIReady = () => {
         initPlayer();
       };
     } else {
-      // API already loaded, init immediately
       initPlayer();
     }
 
     return () => {
-      // Cleanup
       if (playerRef.current) {
         try {
-          // Check if destroy method exists before calling
           if (typeof playerRef.current.destroy === 'function') {
             playerRef.current.destroy();
           }
@@ -89,9 +88,7 @@ const Hero = () => {
     if (playerRef.current) {
       try {
         if (isMuted) {
-          // When unmuting, first ensure the video is playing
           playerRef.current.unMute();
-          // Play the video
           playerRef.current.playVideo();
         } else {
           playerRef.current.mute();
@@ -105,7 +102,6 @@ const Hero = () => {
 
   return (
     <section className="relative h-screen flex items-center overflow-hidden hero-section">
-      {/* Background Video */}
       <div className="absolute inset-0 z-0" ref={videoContainerRef}>
         <div
           id="youtube-player"
@@ -124,7 +120,6 @@ const Hero = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/40" />
       </div>
 
-      {/* Sound Toggle Button */}
       <button
         onClick={toggleMute}
         className="absolute bottom-6 right-6 z-20 p-3 bg-black/50 rounded-full text-white hover:bg-black/70 transition-colors"
@@ -133,7 +128,6 @@ const Hero = () => {
         {isMuted ? <VolumeX size={24} /> : <Volume2 size={24} />}
       </button>
 
-      {/* Content - Pushed down from the top */}
       <div className="relative z-10 text-center max-w-4xl mx-auto px-6 mt-32">
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
@@ -141,7 +135,7 @@ const Hero = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="text-6xl font-bold text-white mb-6 font-serif leading-tight"
         >
-          I'm Lara Chapman, Realtor® with Bliss Realty.
+          {heroTitle}
         </motion.h1>
 
         <motion.p
@@ -150,7 +144,7 @@ const Hero = () => {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="text-xl text-white/90 mb-10 max-w-2xl mx-auto leading-relaxed"
         >
-          Realtor®, investor, and home stager helping Phoenix Valley clients buy and sell with confidence.
+          {heroSubtitle}
         </motion.p>
 
         <motion.div
@@ -182,6 +176,11 @@ const Hero = () => {
 }
 
 const IntroBox = () => {
+  const { content } = usePageContent();
+
+  // Get dynamic content with fallback
+  const bioExcerpt = content?.home?.bioExcerpt || "I'm Lara Chapman, a native Phoenician and REALTOR® who brings together operational leadership, hands-on service, and real estate experience. My background in finance taught me how to lead teams and navigate complex decisions, and owning a massage therapy business deepened my ability to listen closely and support people through important moments. Combined with my investing and home staging experience, this gives me a well-rounded approach that is both strategic and deeply client-focused. I truly care about the people I serve, and I'm here to help you buy, sell, or invest with confidence and clarity.";
+
   return (
     <motion.section
       initial={{ opacity: 0, y: 50 }}
@@ -193,7 +192,7 @@ const IntroBox = () => {
       <div className="max-w-4xl mx-auto">
         <div className="bg-white p-12 rounded-2xl shadow-md text-center">
           <p className="text-lg text-[#555555] leading-relaxed">
-            I’m Lara Chapman, a native Phoenician and REALTOR® who brings together operational leadership, hands-on service, and real estate experience. My background in finance taught me how to lead teams and navigate complex decisions, and owning a massage therapy business deepened my ability to listen closely and support people through important moments. Combined with my investing and home staging experience, this gives me a well-rounded approach that is both strategic and deeply client-focused. I truly care about the people I serve, and I’m here to help you buy, sell, or invest with confidence and clarity.
+            {bioExcerpt}
           </p>
         </div>
       </div>
@@ -202,6 +201,12 @@ const IntroBox = () => {
 }
 
 const ServicesGrid = () => {
+  const { content } = usePageContent();
+
+  // Get dynamic content with fallbacks
+  const servicesTitle = content?.home?.servicesTitle || 'My Services';
+  const servicesSubtitle = content?.home?.servicesSubtitle || 'From buying your first home to building an investment portfolio, I provide comprehensive real estate services.';
+
   const services = [
     {
       icon: HomeIcon,
@@ -243,9 +248,9 @@ const ServicesGrid = () => {
     >
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-5xl font-bold text-[#333333] mb-6 font-serif">My Services</h2>
+          <h2 className="text-5xl font-bold text-[#333333] mb-6 font-serif">{servicesTitle}</h2>
           <p className="text-xl text-[#555555] max-w-2xl mx-auto">
-            From buying your first home to building an investment portfolio, I provide comprehensive real estate services.
+            {servicesSubtitle}
           </p>
         </div>
 
@@ -379,7 +384,6 @@ const TestimonialsCarousel = () => {
             </motion.div>
           </AnimatePresence>
 
-          {/* Navigation buttons */}
           <button
             onClick={prevTestimonial}
             className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-12 bg-white p-3 rounded-full shadow-md hover:shadow-lg transition-all duration-200 hover:scale-110"
@@ -394,7 +398,6 @@ const TestimonialsCarousel = () => {
           </button>
         </div>
 
-        {/* Dots indicator */}
         <div className="flex justify-center mt-8 space-x-3">
           {testimonials.map((_, index) => (
             <button
@@ -411,6 +414,12 @@ const TestimonialsCarousel = () => {
 }
 
 const ClosingCTA = () => {
+  const { content } = usePageContent();
+
+  // Get dynamic content with fallbacks
+  const ctaTitle = content?.home?.ctaTitle || "Ready to talk about your goals? Let's connect.";
+  const ctaSubtitle = content?.home?.ctaSubtitle || "Whether you're buying, selling, or investing, I'm here to help you achieve your real estate dreams in the Phoenix Valley.";
+
   return (
     <motion.section
       initial={{ opacity: 0 }}
@@ -421,10 +430,10 @@ const ClosingCTA = () => {
     >
       <div className="max-w-4xl mx-auto text-center">
         <h2 className="text-5xl font-bold text-white mb-6 font-serif">
-          Ready to talk about your goals? Let's connect.
+          {ctaTitle}
         </h2>
         <p className="text-xl text-white/90 mb-10 max-w-2xl mx-auto">
-          Whether you're buying, selling, or investing, I'm here to help you achieve your real estate dreams in the Phoenix Valley.
+          {ctaSubtitle}
         </p>
         <Link
           to="/contact"

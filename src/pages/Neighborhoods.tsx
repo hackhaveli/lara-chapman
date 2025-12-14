@@ -299,10 +299,40 @@ const NeighborhoodsMain = () => {
   useEffect(() => {
     const fetchNeighborhoods = async () => {
       try {
-        // Use the local NEIGHBORHOODS array instead of fetching from Supabase
-        setNeighborhoods(NEIGHBORHOODS)
+        // Try to fetch from API first
+        const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+        const response = await fetch(`${API_URL}/neighborhoods?active=true`);
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.data && data.data.length > 0) {
+            // Transform API data to match local format
+            const apiNeighborhoods = data.data.map((n: any) => ({
+              id: n._id,
+              slug: n.slug,
+              title: n.name,
+              description: n.fullDescription,
+              video_url: n.videoUrl || null,
+              highlights: n.highlights || [],
+              quick_facts: n.stats || { homeValues: '', costOfLiving: '', lifestyle: '' },
+              didYouKnow: n.didYouKnow || '',
+              schools: n.schools || '',
+              summary: n.summary || [],
+              ctaButtons: n.ctaButtons || []
+            }));
+            setNeighborhoods(apiNeighborhoods);
+          } else {
+            // Fall back to local data if API returns empty
+            setNeighborhoods(NEIGHBORHOODS);
+          }
+        } else {
+          // Fall back to local data if API fails
+          setNeighborhoods(NEIGHBORHOODS);
+        }
       } catch (error) {
-        console.error('Error loading neighborhoods:', error)
+        console.error('Error loading neighborhoods from API, using local data:', error)
+        // Fall back to local data on error
+        setNeighborhoods(NEIGHBORHOODS)
       } finally {
         setLoading(false)
       }

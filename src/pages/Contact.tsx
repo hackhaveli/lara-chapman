@@ -1,9 +1,22 @@
 import { useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Phone, Mail, MapPin, Facebook, Instagram, Linkedin, Youtube, Twitter } from 'lucide-react'
-
+import { usePageContent } from '../hooks/usePageContent'
 
 const Contact = () => {
+  const { content } = usePageContent();
+
+  // Get dynamic content with fallbacks
+  const pageTitle = content?.contact?.pageTitle || "Let's Connect";
+  const pageSubtitle = content?.contact?.pageSubtitle || "Ready to start your real estate journey? I'm here to help with all your buying, selling, and investing needs.";
+  const formTitle = content?.contact?.formTitle || 'Send Me a Message';
+  const profileBlurb = content?.contact?.profileBlurb || "I'm always available to help with your real estate questions. Whether you're buying, selling, or just exploring your options, I'd love to hear from you.";
+  const phone = content?.contact?.phone || '(602) 405-8002';
+  const email = content?.contact?.email || 'KeysPlease@LaraLovesPhoenix.com';
+  const address = content?.contact?.address || 'Phoenix, Arizona';
+  const officeHours = content?.contact?.officeHours || 'Serving the entire Valley';
+  const socialBlurb = content?.contact?.socialBlurb || 'Get market updates, home tips, and behind-the-scenes content from my daily real estate adventures.';
+
   // Load the LeadConnector form embed script
   useEffect(() => {
     const script = document.createElement('script')
@@ -12,7 +25,6 @@ const Contact = () => {
     document.body.appendChild(script)
 
     return () => {
-      // Cleanup script on component unmount
       document.body.removeChild(script)
     }
   }, [])
@@ -26,9 +38,9 @@ const Contact = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h1 className="text-6xl font-bold text-[#333333] mb-6 font-serif">Let's Connect</h1>
+          <h1 className="text-6xl font-bold text-[#333333] mb-6 font-serif">{pageTitle}</h1>
           <p className="text-xl text-[#555555] max-w-2xl mx-auto">
-            Ready to start your real estate journey? I'm here to help with all your buying, selling, and investing needs.
+            {pageSubtitle}
           </p>
         </motion.div>
 
@@ -40,7 +52,7 @@ const Contact = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
           >
             <div className="bg-white p-12 rounded-2xl shadow-md">
-              <h2 className="text-3xl font-bold text-[#333333] mb-8 font-serif">Send Me a Message</h2>
+              <h2 className="text-3xl font-bold text-[#333333] mb-8 font-serif">{formTitle}</h2>
 
               {/* LeadConnector Form Iframe */}
               <div className="w-full" style={{ minHeight: '1162px' }}>
@@ -85,8 +97,7 @@ const Contact = () => {
               <h3 className="text-2xl font-bold text-[#333333] mb-2">Lara Chapman</h3>
               <p className="text-[#E76F51] font-semibold mb-6">Realtor® | Investor | Home Stager</p>
               <p className="text-[#555555] mb-8 leading-relaxed">
-                I'm always available to help with your real estate questions. Whether you're buying, selling,
-                or just exploring your options, I'd love to hear from you.
+                {profileBlurb}
               </p>
             </div>
 
@@ -94,22 +105,22 @@ const Contact = () => {
             <div className="bg-white p-8 rounded-2xl shadow-md">
               <h3 className="text-xl font-bold text-[#333333] mb-6">Get in Touch</h3>
               <div className="space-y-4">
-                <a href="tel:602-405-8002" className="flex items-center space-x-4 hover:opacity-80 transition-opacity">
+                <a href={`tel:${phone.replace(/[^0-9]/g, '')}`} className="flex items-center space-x-4 hover:opacity-80 transition-opacity">
                   <div className="bg-[#E76F51]/10 p-3 rounded-xl">
                     <Phone size={20} className="text-[#E76F51]" />
                   </div>
                   <div>
-                    <p className="font-semibold text-[#333333]">(602) 405-8002</p>
+                    <p className="font-semibold text-[#333333]">{phone}</p>
                     <p className="text-sm text-[#555555]">Call or text anytime</p>
                   </div>
                 </a>
 
-                <a href="mailto:KeysPlease@LaraLovesPhoenix.com" className="flex items-center space-x-4 hover:opacity-80 transition-opacity">
+                <a href={`mailto:${email}`} className="flex items-center space-x-4 hover:opacity-80 transition-opacity">
                   <div className="bg-[#2A9D8F]/10 p-3 rounded-xl">
                     <Mail size={20} className="text-[#2A9D8F]" />
                   </div>
                   <div>
-                    <p className="font-semibold text-[#333333]">KeysPlease@LaraLovesPhoenix.com</p>
+                    <p className="font-semibold text-[#333333]">{email}</p>
                     <p className="text-sm text-[#555555]">Email for quick questions</p>
                   </div>
                 </a>
@@ -119,8 +130,8 @@ const Contact = () => {
                     <MapPin size={20} className="text-[#E76F51]" />
                   </div>
                   <div>
-                    <p className="font-semibold text-[#333333]">Phoenix, Arizona</p>
-                    <p className="text-sm text-[#555555]">Serving the entire Valley</p>
+                    <p className="font-semibold text-[#333333]">{address}</p>
+                    <p className="text-sm text-[#555555]">{officeHours}</p>
                   </div>
                 </div>
               </div>
@@ -173,7 +184,7 @@ const Contact = () => {
               </a>
             </div>
             <p className="text-sm text-[#555555] mt-4">
-              Get market updates, home tips, and behind-the-scenes content from my daily real estate adventures.
+              {socialBlurb}
             </p>
           </div>
         </div>

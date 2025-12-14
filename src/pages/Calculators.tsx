@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Home, DollarSign, RefreshCw } from 'lucide-react';
 
@@ -10,15 +10,6 @@ const formatCurrency = (amount: number) => {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(amount);
-};
-
-// Format percentage
-const formatPercent = (value: number) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'percent',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value / 100);
 };
 
 const MortgagePaymentCalculator = () => {
@@ -345,8 +336,16 @@ const AffordabilityCalculator = () => {
   );
 };
 
+import { usePageContent } from '../hooks/usePageContent';
+
 const Calculators = () => {
   const [activeTab, setActiveTab] = useState('payment');
+  const { content } = usePageContent();
+
+  // Get dynamic content with fallbacks
+  const title = content?.calculators?.pageTitle || 'Mortgage Calculators';
+  const intro = content?.calculators?.mortgageIntroText || 'Estimate your payments, affordability, and more with our easy-to-use mortgage calculators.';
+  const disclaimer = content?.calculators?.disclaimer || 'These calculators are for informational purposes only and do not constitute financial advice.';
 
   return (
     <div className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50 min-h-screen">
@@ -357,11 +356,12 @@ const Calculators = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-12"
         >
-          <h1 className="text-4xl font-bold text-gray-900 mb-4 font-serif">Mortgage Calculators</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4 font-serif">{title}</h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Estimate your payments, affordability, and more with our easy-to-use mortgage calculators.
+            {intro}
           </p>
         </motion.div>
+
 
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
           <div className="border-b border-gray-200">
@@ -369,8 +369,8 @@ const Calculators = () => {
               <button
                 onClick={() => setActiveTab('payment')}
                 className={`py-4 px-6 text-center border-b-2 font-medium text-sm flex items-center justify-center space-x-2 ${activeTab === 'payment'
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }`}
               >
                 <DollarSign size={18} />
@@ -379,8 +379,8 @@ const Calculators = () => {
               <button
                 onClick={() => setActiveTab('affordability')}
                 className={`py-4 px-6 text-center border-b-2 font-medium text-sm flex items-center justify-center space-x-2 ${activeTab === 'affordability'
-                    ? 'border-green-500 text-green-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-green-500 text-green-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }`}
               >
                 <Home size={18} />
@@ -389,8 +389,8 @@ const Calculators = () => {
               <button
                 onClick={() => setActiveTab('refinance')}
                 className={`py-4 px-6 text-center border-b-2 font-medium text-sm flex items-center justify-center space-x-2 ${activeTab === 'refinance'
-                    ? 'border-purple-500 text-purple-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  ? 'border-purple-500 text-purple-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }`}
               >
                 <RefreshCw size={18} />
@@ -414,7 +414,7 @@ const Calculators = () => {
         </div>
 
         <div className="mt-8 text-center text-sm text-gray-500">
-          <p>These calculators are for informational purposes only and do not constitute financial advice.</p>
+          <p>{disclaimer}</p>
           <p className="mt-2">
             For personalized assistance with your mortgage needs, please{' '}
             <a href="/contact" className="text-blue-600 hover:underline">contact us</a>.

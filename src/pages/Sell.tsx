@@ -1,42 +1,31 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { DollarSign, Camera, TrendingUp, FileText, Key, CheckCircle, ChevronDown, ChevronUp } from 'lucide-react'
+import { DollarSign, Camera, TrendingUp, FileText, Key, CheckCircle, ChevronDown, ChevronUp, Search, Eye, Home, Star, Award, Target } from 'lucide-react'
+import { usePageContent } from '../hooks/usePageContent';
+
+// Icon mapping for dynamic content
+const iconMap: { [key: string]: React.ComponentType<{ size?: number; className?: string }> } = {
+  FileText, Search, Eye, Key, Home, DollarSign, Camera, TrendingUp, CheckCircle, Star, Award, Target
+};
+
+// Default seller steps for fallback
+const defaultSellerSteps = [
+  { icon: 'DollarSign', title: 'Strategic Pricing Analysis', text: 'I analyze recent sales, current market conditions, and your home\'s unique features to price it competitively for maximum return.' },
+  { icon: 'Camera', title: 'Professional Staging & Photography', text: 'Transform your home with professional staging techniques and high-quality photography that showcases its best features.' },
+  { icon: 'TrendingUp', title: 'Comprehensive Marketing Strategy', text: 'Multi-channel marketing including MLS, social media, professional networks, and targeted advertising to reach qualified buyers.' },
+  { icon: 'FileText', title: 'Expert Negotiation', text: 'I handle all negotiations to secure the best possible terms, price, and timeline for your sale.' },
+  { icon: 'CheckCircle', title: 'Transaction Management', text: 'From contract to closing, I coordinate inspections, appraisals, and all paperwork to ensure a smooth process.' },
+  { icon: 'Key', title: 'Successful Closing', text: 'I\'m with you through closing day and beyond, ensuring all details are handled professionally.' }
+];
 
 const Sell = () => {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
+  const { content, loading } = usePageContent();
 
-  const sellerSteps = [
-    {
-      icon: DollarSign,
-      title: 'Strategic Pricing Analysis',
-      description: 'I analyze recent sales, current market conditions, and your home\'s unique features to price it competitively for maximum return.'
-    },
-    {
-      icon: Camera,
-      title: 'Professional Staging & Photography',
-      description: 'Transform your home with professional staging techniques and high-quality photography that showcases its best features.'
-    },
-    {
-      icon: TrendingUp,
-      title: 'Comprehensive Marketing Strategy',
-      description: 'Multi-channel marketing including MLS, social media, professional networks, and targeted advertising to reach qualified buyers.'
-    },
-    {
-      icon: FileText,
-      title: 'Expert Negotiation',
-      description: 'I handle all negotiations to secure the best possible terms, price, and timeline for your sale.'
-    },
-    {
-      icon: CheckCircle,
-      title: 'Transaction Management',
-      description: 'From contract to closing, I coordinate inspections, appraisals, and all paperwork to ensure a smooth process.'
-    },
-    {
-      icon: Key,
-      title: 'Successful Closing',
-      description: 'I\'m with you through closing day and beyond, ensuring all details are handled professionally.'
-    }
-  ]
+  // Use API data if available, otherwise fall back to defaults
+  const sellerSteps = content?.sell?.marketingPoints && content.sell.marketingPoints.length > 0
+    ? content.sell.marketingPoints
+    : defaultSellerSteps;
 
   const stagingGallery = [
     {
@@ -88,6 +77,13 @@ const Sell = () => {
     setOpenFAQ(openFAQ === index ? null : index)
   }
 
+  // Get dynamic intro content with fallbacks
+  const introTitle = content?.sell?.introTitle || 'Selling Your Home with Lara';
+  const introText = content?.sell?.introText || 'Get top dollar for your home with strategic pricing, professional staging, and expert marketing that reaches qualified buyers.';
+  const stagingTitle = content?.sell?.stagingTitle || 'Staging Examples';
+  const stagingSubtitle = content?.sell?.stagingSubtitle || 'See how professional staging transforms spaces to appeal to potential buyers.';
+  const stagingCta = content?.sell?.stagingCta || 'Professional staging can help your home sell faster and for a higher price. As a certified home stager, I can help you prepare your home to make the best possible impression on buyers.';
+
   return (
     <div className="py-24 px-6">
       <div className="max-w-7xl mx-auto">
@@ -97,9 +93,9 @@ const Sell = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h1 className="text-6xl font-bold text-[#333333] mb-6 font-serif">Selling Your Home with Lara</h1>
+          <h1 className="text-6xl font-bold text-[#333333] mb-6 font-serif">{introTitle}</h1>
           <p className="text-xl text-[#555555] max-w-3xl mx-auto">
-            Get top dollar for your home with strategic pricing, professional staging, and expert marketing that reaches qualified buyers.
+            {introText}
           </p>
         </motion.div>
 
@@ -119,27 +115,44 @@ const Sell = () => {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {sellerSteps.map(({ icon: Icon, title, description }, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 hover:scale-105"
-              >
-                <div className="flex justify-between items-start mb-6">
-                  <div className="bg-[#E76F51] text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg">
-                    {index + 1}
+            {loading ? (
+              // Loading skeleton
+              [...Array(6)].map((_, index) => (
+                <div key={index} className="bg-white p-8 rounded-2xl shadow-md animate-pulse">
+                  <div className="flex justify-between items-start mb-6">
+                    <div className="bg-gray-300 w-10 h-10 rounded-full"></div>
+                    <div className="bg-gray-200 w-16 h-16 rounded-xl"></div>
                   </div>
-                  <div className="bg-[#E76F51]/10 w-16 h-16 rounded-xl flex items-center justify-center">
-                    <Icon size={32} className="text-[#E76F51]" />
-                  </div>
+                  <div className="h-6 bg-gray-200 rounded w-2/3 mb-4"></div>
+                  <div className="h-4 bg-gray-200 rounded w-full"></div>
                 </div>
-                <h3 className="text-xl font-bold text-[#333333] mb-4">{title}</h3>
-                <p className="text-[#555555] leading-relaxed">{description}</p>
-              </motion.div>
-            ))}
+              ))
+            ) : (
+              sellerSteps.map((step, index) => {
+                const IconComponent = iconMap[step.icon] || DollarSign;
+                return (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    className="bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 hover:scale-105"
+                  >
+                    <div className="flex justify-between items-start mb-6">
+                      <div className="bg-[#E76F51] text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg">
+                        {index + 1}
+                      </div>
+                      <div className="bg-[#E76F51]/10 w-16 h-16 rounded-xl flex items-center justify-center">
+                        <IconComponent size={32} className="text-[#E76F51]" />
+                      </div>
+                    </div>
+                    <h3 className="text-xl font-bold text-[#333333] mb-4">{step.title}</h3>
+                    <p className="text-[#555555] leading-relaxed">{step.text}</p>
+                  </motion.div>
+                );
+              })
+            )}
           </div>
         </motion.section>
 
@@ -147,9 +160,9 @@ const Sell = () => {
         <section className="py-16 bg-[#FAF9F6]">
           <div className="max-w-7xl mx-auto px-6">
             <div className="text-center mb-12">
-              <h2 className="text-4xl font-bold text-[#333333] mb-4">Staging Examples</h2>
+              <h2 className="text-4xl font-bold text-[#333333] mb-4">{stagingTitle}</h2>
               <p className="text-xl text-[#555555] max-w-3xl mx-auto">
-                See how professional staging transforms spaces to appeal to potential buyers.
+                {stagingSubtitle}
               </p>
             </div>
 
@@ -180,8 +193,7 @@ const Sell = () => {
 
             <div className="text-center mt-12">
               <p className="text-lg text-[#555555] mb-6 max-w-3xl mx-auto">
-                Professional staging can help your home sell faster and for a higher price.
-                As a certified home stager, I can help you prepare your home to make the best possible impression on buyers.
+                {stagingCta}
               </p>
               <a
                 href="https://styleandstaging.com"
