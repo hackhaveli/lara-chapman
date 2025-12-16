@@ -1,0 +1,223 @@
+{/* Header Tab */}
+            {activeTab === 'header' && (
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-white rounded-2xl p-6 shadow-sm space-y-6"
+                >
+                    <div>
+                        <h2 className="text-lg font-bold text-slate-800 mb-4 border-b pb-2">Header/Navigation Content</h2>
+                        <p className="text-sm text-slate-600 mb-4">
+                            Edit the logo text that appears in the navigation header across all pages.
+                        </p>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-slate-700 mb-2">
+                                Logo Text
+                            </label>
+                            <input
+                                type="text"
+                                value={headerContent.logoText}
+                                onChange={(e) => setHeaderContent(prev => ({ ...prev, logoText: e.target.value }))}
+                                className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E76F51]"
+                                placeholder="Lara Chapman"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-slate-700 mb-2">
+                                Logo Subtext
+                            </label>
+                            <input
+                                type="text"
+                                value={headerContent.logoSubtext}
+                                onChange={(e) => setHeaderContent(prev => ({ ...prev, logoSubtext: e.target.value }))}
+                                className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E76F51]"
+                                placeholder="Realtor®"
+                            />
+                        </div>
+                    </div>
+                </motion.div>
+            )}
+
+            {/* Footer Tab */}
+            {activeTab === 'footer' && (
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-white rounded-2xl p-6 shadow-sm space-y-6"
+                >
+                    <div>
+                        <h2 className="text-lg font-bold text-slate-800 mb-4 border-b pb-2">Footer Content</h2>
+                        <p className="text-sm text-slate-600 mb-4">
+                            Edit the footer content that appears at the bottom of all pages.
+                        </p>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-slate-700 mb-2">
+                                Footer Logo Text
+                            </label>
+                            <input
+                                type="text"
+                                value={footerContent.logoText}
+                                onChange={(e) => setFooterContent(prev => ({ ...prev, logoText: e.target.value }))}
+                                className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E76F51]"
+                                placeholder="Lara Chapman"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-slate-700 mb-2">
+                                Copyright Text
+                            </label>
+                            <input
+                                type="text"
+                                value={footerContent.copyrightText}
+                                onChange={(e) => setFooterContent(prev => ({ ...prev, copyrightText: e.target.value }))}
+                                className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E76F51]"
+                                placeholder="© 2025 Lara Chapman, Realtor | Bliss Realty"
+                            />
+                        </div>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">
+                            Tagline
+                        </label>
+                        <textarea
+                            value={footerContent.tagline}
+                            onChange={(e) => setFooterContent(prev => ({ ...prev, tagline: e.target.value }))}
+                            rows={2}
+                            className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E76F51]"
+                            placeholder="Realtor®, investor, and home stager helping Phoenix Valley clients buy and sell with confidence."
+                        />
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-slate-700 mb-2">
+                                Home Staging URL
+                            </label>
+                            <input
+                                type="url"
+                                value={footerContent.stagingUrl}
+                                onChange={(e) => setFooterContent(prev => ({ ...prev, stagingUrl: e.target.value }))}
+                                className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E76F51]"
+                                placeholder="https://styleandstaging.com"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-slate-700 mb-2">
+                                Investment Properties URL
+                            </label>
+                            <input
+                                type="url"
+                                value={footerContent.investmentUrl}
+                                onChange={(e) => setFooterContent(prev => ({ ...prev, investmentUrl: e.target.value }))}
+                                className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E76F51]"
+                                placeholder="https://orangedoorinvestmentgroup.com"
+                            />
+                        </div>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">
+                            Disclaimer Text
+                        </label>
+                        <textarea
+                            value={footerContent.disclaimerText}
+                            onChange={(e) => setFooterContent(prev => ({ ...prev, disclaimerText: e.target.value }))}
+                            rows={4}
+                            className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E76F51]"
+                            placeholder="The data relating to real estate for sale on this web site comes in part from the Internet Data Exchange (IDX) program..."
+                        />
+                    </div>
+
+                    <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                        <p className="text-sm text-blue-800">
+                            <strong>Note:</strong> Social media links and contact info are managed in the Contact tab.
+                        </p>
+                    </div>
+                </motion.div>
+            )}
+
+            {/* Resources Tab */}
+            {activeTab === 'resources' && (
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-white rounded-2xl p-6 shadow-sm space-y-6"
+                >
+                    <div>
+                        <h2 className="text-lg font-bold text-slate-800 mb-4 border-b pb-2">Resources Page Content</h2>
+                        <p className="text-sm text-slate-600 mb-4">
+                            Edit the content that appears on the Resources page.
+                        </p>
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">
+                            Page Title
+                        </label>
+                        <input
+                            type="text"
+                            value={resourcesContent.pageTitle}
+                            onChange={(e) => setResourcesContent(prev => ({ ...prev, pageTitle: e.target.value }))}
+                            className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E76F51]"
+                            placeholder="Helpful Resources"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">
+                            Page Subtitle
+                        </label>
+                        <textarea
+                            value={resourcesContent.pageSubtitle}
+                            onChange={(e) => setResourcesContent(prev => ({ ...prev, pageSubtitle: e.target.value }))}
+                            rows={2}
+                            className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E76F51]"
+                            placeholder="Download free guides, checklists, and reports to help you navigate the Phoenix Valley real estate market with confidence."
+                        />
+                    </div>
+
+                    <h2 className="text-lg font-bold text-slate-800 border-b pb-2 pt-4">Call-to-Action Section</h2>
+
+                    <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">
+                            CTA Section Title
+                        </label>
+                        <input
+                            type="text"
+                            value={resourcesContent.ctaSectionTitle}
+                            onChange={(e) => setResourcesContent(prev => ({ ...prev, ctaSectionTitle: e.target.value }))}
+                            className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E76F51]"
+                            placeholder="Need More Information?"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">
+                            CTA Section Text
+                        </label>
+                        <textarea
+                            value={resourcesContent.ctaSectionText}
+                            onChange={(e) => setResourcesContent(prev => ({ ...prev, ctaSectionText: e.target.value }))}
+                            rows={3}
+                            className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E76F51]"
+                            placeholder="These resources are just the beginning. I'm here to provide personalized guidance and answer any questions you have about buying, selling, or investing in Phoenix Valley real estate."
+                        />
+                    </div>
+
+                    <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                        <p className="text-sm text-blue-800">
+                            <strong>Note:</strong> Contact phone and email displayed on this page are managed in the Contact tab.
+                        </p>
+                    </div>
+                </motion.div>
+            )}

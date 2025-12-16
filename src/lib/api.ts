@@ -62,11 +62,26 @@ export const login = async (username: string, password: string): Promise<{ succe
 
 // ============ CONTENT API ============
 
+export interface HeaderContent {
+    logoText: string;
+    logoSubtext: string;
+    menuItems: {
+        label: string;
+        path: string;
+        isExternal: boolean;
+    }[];
+}
+
 export interface SiteContent {
     home: {
         heroTitle: string;
         heroSubtitle: string;
         heroImage: string;
+        heroVideoId: string;
+        heroButton1Text: string;
+        heroButton1Url: string;
+        heroButton2Text: string;
+        heroButton2Url: string;
         bioExcerpt: string;
         servicesTitle: string;
         servicesSubtitle: string;
@@ -79,34 +94,72 @@ export interface SiteContent {
         pageSubtitle: string;
         fullBio: string;
         profileImage: string;
+        profileName: string;
+        profileTitle: string;
+        profileCompany: string;
         philosophyTitle: string;
         philosophyText: string;
         lifestyleTitle: string;
         lifestyleText: string;
+        lifestyleImage: string;
     };
     buy: {
         introTitle: string;
         introText: string;
         mlsDescription: string;
         stepsTitle: string;
+        stepsSubtitle: string;
         neighborhoodTitle: string;
         neighborhoodText: string;
+        searchButtonText: string;
+        searchButtonUrl: string;
+        neighborhoodButtonText: string;
+        neighborhoodButtonUrl: string;
+        ctaButtonText: string;
+        ctaButtonUrl: string;
+        resourcesTitle: string;
+        resourcesSubtitle: string;
         steps: Array<{ icon: string; title: string; text: string }>;
+        resources: Array<{ icon: string; title: string; description: string; buttonText: string; buttonUrl: string; isExternal: boolean; isDownload: boolean }>;
     };
     sell: {
         introTitle: string;
         introText: string;
         stepsTitle: string;
+        stepsSubtitle: string;
         stagingTitle: string;
         stagingSubtitle: string;
         stagingCta: string;
+        stagingButtonText: string;
+        stagingButtonUrl: string;
+        stagingGallery: Array<{ image: string; room: string; description: string }>;
+        resourcesTitle: string;
+        resourcesSubtitle: string;
+        resources: Array<{ icon: string; title: string; description: string; buttonText: string; buttonUrl: string; isExternal: boolean; isDownload: boolean }>;
+        faqTitle: string;
+        faqSubtitle: string;
+        faqs: Array<{ question: string; answer: string }>;
+        ctaTitle: string;
+        ctaText: string;
+        ctaButtonText: string;
+        ctaButtonUrl: string;
         marketingPoints: Array<{ icon: string; title: string; text: string }>;
+    };
+    neighborhoods: {
+        pageTitle: string;
+        pageDescription: string;
     };
     calculators: {
         pageTitle: string;
         mortgageIntroText: string;
         affordabilityIntroText: string;
         disclaimer: string;
+        partnerSectionTitle: string;
+        partnerBoxTitle: string;
+        partnerDescription: string;
+        partnerButtonText: string;
+        partnerButtonUrl: string;
+        partnerFooterText: string;
     };
     contact: {
         pageTitle: string;
@@ -119,6 +172,58 @@ export interface SiteContent {
         mapEmbedUrl: string;
         officeHours: string;
         socialBlurb: string;
+        profileImage: string;
+        profileName: string;
+        profileTitle: string;
+        facebookUrl: string;
+        instagramUrl: string;
+        linkedinUrl: string;
+        youtubeUrl: string;
+        twitterUrl: string;
+    };
+    header: HeaderContent;
+    footer: {
+        logoText: string;
+        tagline: string;
+        copyrightText: string;
+        disclaimerText: string;
+
+        quickLinks: Array<{ label: string; path: string; isExternal: boolean }>;
+        resourceLinks: Array<{ label: string; path: string; isExternal: boolean }>;
+
+        quickLinksTitle: string;
+        resourcesTitle: string;
+        contactTitle: string;
+
+        address: string;
+        officeHours: string;
+        email: string;
+        phone: string;
+
+        consultationButtonText: string;
+        searchHomesUrl: string;
+
+        privacyPolicyLinkText: string;
+        termsLinkText: string;
+        accessibilityLinkText: string;
+    };
+    resources: {
+        pageTitle: string;
+        pageSubtitle: string;
+        ctaSectionTitle: string;
+        ctaSectionText: string;
+        resource1Title: string;
+        resource1Description: string;
+        resource1Url: string;
+        resource2Title: string;
+        resource2Description: string;
+        resource2Url: string;
+        resource3Title: string;
+        resource3Description: string;
+        resource3Url: string;
+        resource4Title: string;
+        resource4Description: string;
+        resource4Url: string;
     };
 }
 

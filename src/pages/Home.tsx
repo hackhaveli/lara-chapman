@@ -22,13 +22,18 @@ const Hero = () => {
   // Get dynamic content with fallbacks
   const heroTitle = content?.home?.heroTitle || "I'm Lara Chapman, Realtor® with Bliss Realty.";
   const heroSubtitle = content?.home?.heroSubtitle || "Realtor®, investor, and home stager helping Phoenix Valley clients buy and sell with confidence.";
+  const videoId = content?.home?.heroVideoId || 'DZfp99BamQk';
+  const button1Text = content?.home?.heroButton1Text || 'Find Out What My Home is Worth';
+  const button1Url = content?.home?.heroButton1Url || 'https://lstrep.co/0xcgPhSCLE';
+  const button2Text = content?.home?.heroButton2Text || 'Search Homes for Sale';
+  const button2Url = content?.home?.heroButton2Url || 'https://search.blissrealtyinvestment.com/idx/search/advanced?agentHeaderID=15891149';
 
   useEffect(() => {
     const initPlayer = () => {
       if (playerRef.current) return;
 
       playerRef.current = new window.YT.Player('youtube-player', {
-        videoId: 'DZfp99BamQk',
+        videoId: videoId,
         playerVars: {
           autoplay: 1,
           controls: 0,
@@ -42,7 +47,7 @@ const Hero = () => {
           iv_load_policy: 3,
           playsinline: 1,
           start: 0,
-          playlist: 'DZfp99BamQk'
+          playlist: videoId
         },
         events: {
           onReady: (event: any) => {
@@ -82,7 +87,7 @@ const Hero = () => {
         playerRef.current = null;
       }
     };
-  }, []);
+  }, [videoId]);
 
   const toggleMute = () => {
     if (playerRef.current) {
@@ -154,20 +159,20 @@ const Hero = () => {
           className="flex flex-col sm:flex-row gap-4 justify-center"
         >
           <a
-            href="https://lstrep.co/0xcgPhSCLE"
+            href={button1Url}
             target="_blank"
             rel="noopener noreferrer"
             className="bg-[#E76F51] text-white px-8 py-4 rounded-xl font-semibold uppercase tracking-wide hover:bg-[#E76F51]/90 transition-all duration-200 hover:scale-105 shadow-lg"
           >
-            Find Out What My Home is Worth
+            {button1Text}
           </a>
           <a
-            href="https://search.blissrealtyinvestment.com/idx/search/advanced?agentHeaderID=15891149"
+            href={button2Url}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block bg-[#E76F51] text-white px-12 py-4 rounded-xl font-semibold uppercase tracking-wide hover:bg-[#E76F51]/90 transition-all duration-200 hover:scale-105 shadow-lg"
           >
-            Search Homes for Sale
+            {button2Text}
           </a>
         </motion.div>
       </div>
@@ -207,36 +212,49 @@ const ServicesGrid = () => {
   const servicesTitle = content?.home?.servicesTitle || 'My Services';
   const servicesSubtitle = content?.home?.servicesSubtitle || 'From buying your first home to building an investment portfolio, I provide comprehensive real estate services.';
 
-  const services = [
+  // Icon mapping
+  const iconMap: { [key: string]: any } = {
+    HomeIcon,
+    DollarSign,
+    Palette,
+    TrendingUp
+  };
+
+  // Default services as fallback
+  const defaultServices = [
     {
-      icon: HomeIcon,
+      icon: 'HomeIcon',
       title: 'Buy',
       description: 'Find your dream home with personalized guidance through the Phoenix Valley market.',
       link: '/buy',
       internal: true
     },
     {
-      icon: DollarSign,
+      icon: 'DollarSign',
       title: 'Sell',
       description: 'Get top dollar for your home with strategic marketing and expert negotiation.',
       link: '/sell',
       internal: true
     },
     {
-      icon: Palette,
+      icon: 'Palette',
       title: 'Stage',
-      description: 'Professional home staging services to showcase your property\'s best features.',
+      description: "Professional home staging services to showcase your property's best features.",
       link: 'https://www.styleandstaging.com',
       internal: false
     },
     {
-      icon: TrendingUp,
+      icon: 'TrendingUp',
       title: 'Invest',
       description: 'Commercial real estate investment opportunities to help you diversify beyond residential.',
       link: 'https://www.orangedoorinvestmentgroup.com',
       internal: false
     }
-  ]
+  ];
+
+  const services = content?.home?.services && content.home.services.length > 0
+    ? content.home.services
+    : defaultServices;
 
   return (
     <motion.section
@@ -255,40 +273,43 @@ const ServicesGrid = () => {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {services.map(({ icon: Icon, title, description, link, internal }, index) => (
-            <motion.div
-              key={title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              whileHover={{ y: -5, scale: 1.02 }}
-              className="bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 group"
-            >
-              <div className="bg-[#E76F51]/10 w-16 h-16 rounded-xl flex items-center justify-center mb-6 group-hover:bg-[#E76F51] transition-colors duration-200">
-                <Icon size={28} className="text-[#E76F51] group-hover:text-white transition-colors duration-200" />
-              </div>
-              <h3 className="text-2xl font-bold text-[#333333] mb-4">{title}</h3>
-              <p className="text-[#555555] mb-6 leading-relaxed">{description}</p>
-              {internal ? (
-                <Link
-                  to={link}
-                  className="inline-flex items-center text-[#E76F51] font-semibold hover:text-[#E76F51]/80 transition-colors"
-                >
-                  Learn More <ArrowRight size={16} className="ml-2" />
-                </Link>
-              ) : (
-                <a
-                  href={link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center text-[#E76F51] font-semibold hover:text-[#E76F51]/80 transition-colors"
-                >
-                  Learn More <ArrowRight size={16} className="ml-2" />
-                </a>
-              )}
-            </motion.div>
-          ))}
+          {services.map(({ icon, title, description, link, internal }, index) => {
+            const Icon = iconMap[icon] || HomeIcon;
+            return (
+              <motion.div
+                key={title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                whileHover={{ y: -5, scale: 1.02 }}
+                className="bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 group"
+              >
+                <div className="bg-[#E76F51]/10 w-16 h-16 rounded-xl flex items-center justify-center mb-6 group-hover:bg-[#E76F51] transition-colors duration-200">
+                  <Icon size={28} className="text-[#E76F51] group-hover:text-white transition-colors duration-200" />
+                </div>
+                <h3 className="text-2xl font-bold text-[#333333] mb-4">{title}</h3>
+                <p className="text-[#555555] mb-6 leading-relaxed">{description}</p>
+                {internal ? (
+                  <Link
+                    to={link}
+                    className="inline-flex items-center text-[#E76F51] font-semibold hover:text-[#E76F51]/80 transition-colors"
+                  >
+                    Learn More <ArrowRight size={16} className="ml-2" />
+                  </Link>
+                ) : (
+                  <a
+                    href={link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center text-[#E76F51] font-semibold hover:text-[#E76F51]/80 transition-colors"
+                  >
+                    Learn More <ArrowRight size={16} className="ml-2" />
+                  </a>
+                )}
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </motion.section>

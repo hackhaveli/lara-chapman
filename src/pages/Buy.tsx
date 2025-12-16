@@ -6,11 +6,16 @@ import MortgageCalculator from '../components/MortgageCalculator';
 import { usePageContent } from '../hooks/usePageContent';
 
 // Icon mapping for dynamic content
-const iconMap: { [key: string]: React.ComponentType<{ size?: number; className?: string }> } = {
+const iconMap: { [key: string]: any } = {
   FileText, Search, Eye, Key, Home, DollarSign, Camera, TrendingUp, CheckCircle, Star, Award, Target
 };
 
 const SearchBar = () => {
+  const { content } = usePageContent();
+
+  const buttonText = content?.buy?.searchButtonText || 'Search Homes for Sale';
+  const buttonUrl = content?.buy?.searchButtonUrl || 'https://search.blissrealtyinvestment.com/idx/search/advanced?agentHeaderID=15891149';
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -19,12 +24,12 @@ const SearchBar = () => {
       className="flex justify-center mb-16"
     >
       <a
-        href="https://search.blissrealtyinvestment.com/idx/search/advanced?agentHeaderID=15891149"
+        href={buttonUrl}
         target="_blank"
         rel="noopener noreferrer"
         className="inline-block bg-[#E76F51] text-white px-12 py-4 rounded-xl font-semibold uppercase tracking-wide hover:bg-[#E76F51]/90 transition-all duration-200 hover:scale-105 shadow-lg"
       >
-        Search Homes for Sale
+        {buttonText}
       </a>
     </motion.div>
   )
@@ -48,6 +53,9 @@ const BuyerSteps = () => {
     ? content.buy.steps
     : defaultSteps;
 
+  const stepsTitle = content?.buy?.stepsTitle || 'Your Home Buying Journey';
+  const stepsSubtitle = content?.buy?.stepsSubtitle || 'I guide you through every step of the process, making home buying as smooth and successful as possible.';
+
   return (
     <motion.section
       initial={{ opacity: 0 }}
@@ -57,9 +65,9 @@ const BuyerSteps = () => {
       className="py-24"
     >
       <div className="text-center mb-16">
-        <h2 className="text-5xl font-bold text-[#333333] mb-6 font-serif">Your Home Buying Journey</h2>
+        <h2 className="text-5xl font-bold text-[#333333] mb-6 font-serif">{stepsTitle}</h2>
         <p className="text-xl text-[#555555] max-w-2xl mx-auto">
-          I guide you through every step of the process, making home buying as smooth and successful as possible.
+          {stepsSubtitle}
         </p>
       </div>
 
@@ -117,6 +125,8 @@ const NeighborhoodExploration = () => {
   // Get dynamic content with fallbacks
   const title = content?.buy?.neighborhoodTitle || 'Explore Phoenix Valley Neighborhoods';
   const text = content?.buy?.neighborhoodText || 'Every community in the Valley has its own character, lifestyle, and price points. Explore my neighborhood guides to find the area that feels like home.';
+  const buttonText = content?.buy?.neighborhoodButtonText || 'View Neighborhood Guides';
+  const buttonUrl = content?.buy?.neighborhoodButtonUrl || '/neighborhoods';
 
   return (
     <motion.section
@@ -134,10 +144,10 @@ const NeighborhoodExploration = () => {
               {text}
             </p>
             <Link
-              to="/neighborhoods"
+              to={buttonUrl}
               className="inline-block bg-[#2A9D8F] text-white px-8 py-4 rounded-xl font-semibold hover:bg-[#2A9D8F]/90 transition-colors"
             >
-              View Neighborhood Guides
+              {buttonText}
             </Link>
           </div>
         </div>
@@ -147,6 +157,8 @@ const NeighborhoodExploration = () => {
 }
 
 const ResourcesSection = () => {
+  const { content } = usePageContent();
+
   const handleDownload = (fileName: string) => {
     const link = document.createElement('a')
     link.href = `/${fileName}`
@@ -156,25 +168,31 @@ const ResourcesSection = () => {
     document.body.removeChild(link)
   }
 
-  const resources = [
+  const resourcesTitle = content?.buy?.resourcesTitle || 'Helpful Resources';
+  const resourcesSubtitle = content?.buy?.resourcesSubtitle || 'Tools and information to help you make informed decisions throughout your home buying journey.';
+  const ctaButtonText = content?.buy?.ctaButtonText || 'Start Your Home Search Today';
+  const ctaButtonUrl = content?.buy?.ctaButtonUrl || 'https://search.blissrealtyinvestment.com/idx/search/advanced?agentHeaderID=15891149';
+
+  const resources = content?.buy?.resources && content.buy.resources.length > 0 ? content.buy.resources : [
     {
-      icon: Home,
+      icon: 'Home',
       title: 'Home Buying Guide',
       description: 'Download my comprehensive guide to buying your home in the Phoenix Valley.',
-      action: 'Download Guide',
-      onClick: () => handleDownload('buyers guide.pdf'),
+      buttonText: 'Download Guide',
+      buttonUrl: '/buyers guide.pdf',
+      isExternal: false,
       isDownload: true
     },
     {
-      icon: FileText,
+      icon: 'FileText',
       title: 'Market Reports',
       description: 'Stay informed with the latest Phoenix Valley market data.',
-      action: 'View Reports',
-      link: '/neighborhoods',
-      external: false,
+      buttonText: 'View Reports',
+      buttonUrl: '/neighborhoods',
+      isExternal: false,
       isDownload: false
     }
-  ]
+  ];
 
   return (
     <motion.section
@@ -186,9 +204,9 @@ const ResourcesSection = () => {
     >
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-5xl font-bold text-[#333333] mb-6 font-serif">Helpful Resources</h2>
+          <h2 className="text-5xl font-bold text-[#333333] mb-6 font-serif">{resourcesTitle}</h2>
           <p className="text-xl text-[#555555] max-w-2xl mx-auto">
-            Tools and information to help you make informed decisions throughout your home buying journey.
+            {resourcesSubtitle}
           </p>
         </div>
 
@@ -206,7 +224,7 @@ const ResourcesSection = () => {
 
           {/* Other Resource Cards */}
           {resources.map((resource, index) => {
-            const Icon = resource.icon
+            const IconComponent = iconMap[resource.icon] || Home;
             return (
               <motion.div
                 key={index}
@@ -217,32 +235,32 @@ const ResourcesSection = () => {
                 className="bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 hover:scale-105 text-center flex flex-col"
               >
                 <div className="bg-[#2A9D8F]/10 w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-6">
-                  <Icon size={28} className="text-[#2A9D8F]" />
+                  <IconComponent size={28} className="text-[#2A9D8F]" />
                 </div>
                 <h3 className="text-2xl font-bold text-[#333333] mb-4">{resource.title}</h3>
                 <p className="text-[#555555] mb-6 flex-grow">{resource.description}</p>
                 {resource.isDownload ? (
                   <button
-                    onClick={resource.onClick}
+                    onClick={() => handleDownload(resource.buttonUrl.replace('/', ''))}
                     className="inline-block bg-[#2A9D8F] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#2A9D8F]/90 transition-colors mt-auto"
                   >
-                    {resource.action}
+                    {resource.buttonText}
                   </button>
-                ) : resource.external ? (
+                ) : resource.isExternal ? (
                   <a
-                    href={resource.link}
+                    href={resource.buttonUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-block bg-[#2A9D8F] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#2A9D8F]/90 transition-colors mt-auto"
                   >
-                    {resource.action}
+                    {resource.buttonText}
                   </a>
                 ) : (
                   <Link
-                    to={resource.link || '/'}
+                    to={resource.buttonUrl}
                     className="inline-block bg-[#2A9D8F] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#2A9D8F]/90 transition-colors mt-auto"
                   >
-                    {resource.action}
+                    {resource.buttonText}
                   </Link>
                 )}
               </motion.div>
@@ -258,12 +276,12 @@ const ResourcesSection = () => {
           className="text-center mt-16"
         >
           <a
-            href="https://search.blissrealtyinvestment.com/idx/search/advanced?agentHeaderID=15891149"
+            href={ctaButtonUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block bg-[#E76F51] text-white px-12 py-4 rounded-xl font-semibold uppercase tracking-wide hover:bg-[#E76F51]/90 transition-all duration-200 hover:scale-105 shadow-lg"
           >
-            Start Your Home Search Today
+            {ctaButtonText}
           </a>
         </motion.div>
       </div>

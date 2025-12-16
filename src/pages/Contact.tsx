@@ -16,6 +16,14 @@ const Contact = () => {
   const address = content?.contact?.address || 'Phoenix, Arizona';
   const officeHours = content?.contact?.officeHours || 'Serving the entire Valley';
   const socialBlurb = content?.contact?.socialBlurb || 'Get market updates, home tips, and behind-the-scenes content from my daily real estate adventures.';
+  const profileImage = content?.contact?.profileImage || '/profile.jpg';
+  const profileName = content?.contact?.profileName || 'Lara Chapman';
+  const profileTitle = content?.contact?.profileTitle || 'Realtor® | Investor | Home Stager';
+  const facebookUrl = content?.contact?.facebookUrl || 'https://www.facebook.com/LaraLovesPhoenix';
+  const instagramUrl = content?.contact?.instagramUrl || 'https://www.instagram.com/laralovesphoenix/';
+  const linkedinUrl = content?.contact?.linkedinUrl || 'https://www.linkedin.com/in/lara-chapman-b4b025357/';
+  const youtubeUrl = content?.contact?.youtubeUrl || 'https://www.youtube.com/@LaraLovesPhoenix';
+  const twitterUrl = content?.contact?.twitterUrl || 'https://x.com/larablissr1';
 
   // Load the LeadConnector form embed script
   useEffect(() => {
@@ -88,14 +96,14 @@ const Contact = () => {
             <div className="bg-white p-12 rounded-2xl shadow-md text-center">
               <div className="w-32 h-32 rounded-full mx-auto mb-6 shadow-lg overflow-hidden">
                 <img
-                  src="/profile.jpg"
-                  alt="Lara Chapman, Realtor"
+                  src={profileImage}
+                  alt={`${profileName}, Realtor`}
                   className="w-full h-full object-cover"
                   style={{ objectPosition: 'center 25%' }}
                 />
               </div>
-              <h3 className="text-2xl font-bold text-[#333333] mb-2">Lara Chapman</h3>
-              <p className="text-[#E76F51] font-semibold mb-6">Realtor® | Investor | Home Stager</p>
+              <h3 className="text-2xl font-bold text-[#333333] mb-2">{profileName}</h3>
+              <p className="text-[#E76F51] font-semibold mb-6">{profileTitle}</p>
               <p className="text-[#555555] mb-8 leading-relaxed">
                 {profileBlurb}
               </p>
@@ -143,7 +151,7 @@ const Contact = () => {
             <h3 className="text-xl font-bold text-[#333333] mb-6">Follow Me</h3>
             <div className="flex flex-wrap gap-4">
               <a
-                href="https://www.facebook.com/LaraLovesPhoenix"
+                href={facebookUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-[#4267B2]/10 p-3 rounded-xl hover:bg-[#4267B2] hover:text-white transition-colors group"
@@ -151,7 +159,7 @@ const Contact = () => {
                 <Facebook size={20} className="text-[#4267B2] group-hover:text-white" />
               </a>
               <a
-                href="https://www.instagram.com/laralovesphoenix/"
+                href={instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-[#E4405F]/10 p-3 rounded-xl hover:bg-[#E4405F] hover:text-white transition-colors group"
@@ -159,7 +167,7 @@ const Contact = () => {
                 <Instagram size={20} className="text-[#E4405F] group-hover:text-white" />
               </a>
               <a
-                href="https://www.linkedin.com/in/lara-chapman-b4b025357/"
+                href={linkedinUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-[#0077B5]/10 p-3 rounded-xl hover:bg-[#0077B5] hover:text-white transition-colors group"
@@ -167,7 +175,7 @@ const Contact = () => {
                 <Linkedin size={20} className="text-[#0077B5] group-hover:text-white" />
               </a>
               <a
-                href="https://www.youtube.com/@LaraLovesPhoenix"
+                href={youtubeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-[#FF0000]/10 p-3 rounded-xl hover:bg-[#FF0000] hover:text-white transition-colors group"
@@ -175,7 +183,7 @@ const Contact = () => {
                 <Youtube size={20} className="text-[#FF0000] group-hover:text-white" />
               </a>
               <a
-                href="https://x.com/larablissr1"
+                href={twitterUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-[#1DA1F2]/10 p-3 rounded-xl hover:bg-[#1DA1F2] hover:text-white transition-colors group"

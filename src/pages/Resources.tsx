@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { FileText, Download, User, Mail } from 'lucide-react'
 import { supabase } from '../lib/supabase'
+import { usePageContent } from '../hooks/usePageContent'
 
 interface Resource {
   id: string
@@ -21,35 +22,44 @@ const Resources = () => {
     email: ''
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const { content } = usePageContent()
 
+  const pageTitle = content?.resources?.pageTitle || 'Helpful Resources'
+  const pageSubtitle = content?.resources?.pageSubtitle || 'Download free guides, checklists, and reports to help you navigate the Phoenix Valley real estate market with confidence.'
+  const ctaSectionTitle = content?.resources?.ctaSectionTitle || 'Need More Information?'
+  const ctaSectionText = content?.resources?.ctaSectionText || 'These resources are just the beginning. I\'m here to provide personalized guidance and answer any questions you have about buying, selling, or investing in Phoenix Valley real estate.'
+  const email = content?.contact?.email || 'lara@blissrealty.com'
+  const phone = content?.contact?.phone || '(480) 555-0123'
+
+  // Default resources (buyer and seller guides)
   // Default resources (buyer and seller guides)
   const defaultResources: Resource[] = [
     {
       id: 'buyers-guide',
-      title: 'Your Guide to Buying a Home in the Phoenix Valley',
-      description: 'Process overview, financing options, timeline, and essential tips for home buyers.',
-      file_url: "/Buyers_Guide.pdf",
+      title: content?.resources?.resource1Title || 'Your Guide to Buying a Home in the Phoenix Valley',
+      description: content?.resources?.resource1Description || 'Process overview, financing options, timeline, and essential tips for home buyers.',
+      file_url: content?.resources?.resource1Url || "/Buyers_Guide.pdf",
       created_at: new Date().toISOString()
     },
     {
       id: 'sellers-guide',
-      title: 'Your Guide to Selling Your Phoenix Valley Home',
-      description: 'Pricing strategies, preparation, staging, marketing, and handling offers.',
-      file_url: "/Sellers_Guide.pdf",
+      title: content?.resources?.resource2Title || 'Your Guide to Selling Your Phoenix Valley Home',
+      description: content?.resources?.resource2Description || 'Pricing strategies, preparation, staging, marketing, and handling offers.',
+      file_url: content?.resources?.resource2Url || "/Sellers_Guide.pdf",
       created_at: new Date().toISOString()
     },
     {
       id: 'staging-checklist',
-      title: 'Staging Checklist - Make Your Home Show-Ready',
-      description: 'Room-by-room preparation tips to maximize your home\'s appeal to potential buyers.',
-      file_url: "/Staging_Checklist.pdf",
+      title: content?.resources?.resource3Title || 'Staging Checklist - Make Your Home Show-Ready',
+      description: content?.resources?.resource3Description || 'Room-by-room preparation tips to maximize your home\'s appeal to potential buyers.',
+      file_url: content?.resources?.resource3Url || "/Staging_Checklist.pdf",
       created_at: new Date().toISOString()
     },
     {
       id: 'monsoon-prep',
-      title: 'Monsoon Prep Tips - Protecting Your Phoenix Home',
-      description: 'Essential maintenance for roof/gutters, yard, AC, and flood safety during monsoon season.',
-      file_url: "/Monsoon_Prep_Tips.pdf",
+      title: content?.resources?.resource4Title || 'Monsoon Prep Tips - Protecting Your Phoenix Home',
+      description: content?.resources?.resource4Description || 'Essential maintenance for roof/gutters, yard, AC, and flood safety during monsoon season.',
+      file_url: content?.resources?.resource4Url || "/Monsoon_Prep_Tips.pdf",
       created_at: new Date().toISOString()
     }
   ]
@@ -63,7 +73,7 @@ const Resources = () => {
           .order('created_at', { ascending: false })
 
         if (error) throw error
-        
+
         // Combine default resources with those from the database
         setResources([...defaultResources, ...(data || [])])
       } catch (error) {
@@ -155,9 +165,9 @@ const Resources = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h1 className="text-6xl font-bold text-[#333333] mb-6 font-serif">Helpful Resources</h1>
+          <h1 className="text-6xl font-bold text-[#333333] mb-6 font-serif">{pageTitle}</h1>
           <p className="text-xl text-[#555555] max-w-3xl mx-auto">
-            Download free guides, checklists, and reports to help you navigate the Phoenix Valley real estate market with confidence.
+            {pageSubtitle}
           </p>
         </motion.div>
 
@@ -201,7 +211,7 @@ const Resources = () => {
               <p className="text-[#555555] mb-6">
                 Please provide your contact information to download this free resource.
               </p>
-              
+
               <form onSubmit={handleFormSubmit} className="space-y-4">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-[#333333] mb-2">
@@ -282,22 +292,22 @@ const Resources = () => {
           className="mt-24"
         >
           <div className="bg-[#FAF9F6] p-12 rounded-2xl text-center">
-            <h2 className="text-3xl font-bold text-[#333333] mb-6 font-serif">Need More Information?</h2>
+            <h2 className="text-3xl font-bold text-[#333333] mb-6 font-serif">{ctaSectionTitle}</h2>
             <p className="text-lg text-[#555555] mb-8 max-w-2xl mx-auto">
-              These resources are just the beginning. I'm here to provide personalized guidance and answer any questions you have about buying, selling, or investing in Phoenix Valley real estate.
+              {ctaSectionText}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
-                href="tel:(480)555-0123"
+                href={`tel:${phone.replace(/[^0-9]/g, '')}`}
                 className="bg-[#2A9D8F] text-white px-8 py-4 rounded-xl font-semibold uppercase tracking-wide hover:bg-[#2A9D8F]/90 transition-all duration-200 hover:scale-105 shadow-lg"
               >
-                Call Me: (480) 555-0123
+                Call Me: {phone}
               </a>
               <a
-                href="mailto:lara@blissrealty.com"
+                href={`mailto:${email}`}
                 className="bg-[#E76F51] text-white px-8 py-4 rounded-xl font-semibold uppercase tracking-wide hover:bg-[#E76F51]/90 transition-all duration-200 hover:scale-105 shadow-lg"
               >
-                Email: lara@blissrealty.com
+                Email: {email}
               </a>
             </div>
           </div>

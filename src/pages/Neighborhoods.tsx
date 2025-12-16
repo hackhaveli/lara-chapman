@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Link, useParams } from 'react-router-dom'
+import { usePageContent } from '../hooks/usePageContent';
 
 
 // Neighborhood data structure
@@ -295,6 +296,11 @@ const NEIGHBORHOODS: Neighborhood[] = [
 const NeighborhoodsMain = () => {
   const [neighborhoods, setNeighborhoods] = useState<Neighborhood[]>([])
   const [loading, setLoading] = useState(true)
+  const { content } = usePageContent();
+
+  // Get dynamic content with fallbacks
+  const pageTitle = content?.neighborhoods?.pageTitle || 'Phoenix Valley Neighborhoods';
+  const pageDescription = content?.neighborhoods?.pageDescription || 'Phoenix is a vibrant and diverse city with neighborhoods that cater to every lifestyle. Whether you\'re drawn to the historic charm of Central Phoenix, the luxury of Scottsdale, the strong-community atmosphere of Chandler, or the up-and-coming energy of the West Valley, there\'s a perfect community waiting for you. Each area offers its own unique character, amenities, and opportunities to create the life you\'ve always wanted in the Valley of the Sun.';
 
   useEffect(() => {
     const fetchNeighborhoods = async () => {
@@ -368,9 +374,9 @@ const NeighborhoodsMain = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 font-serif">Phoenix Valley Neighborhoods</h1>
+          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 font-serif">{pageTitle}</h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Phoenix is a vibrant and diverse city with neighborhoods that cater to every lifestyle. Whether you're drawn to the historic charm of Central Phoenix, the luxury of Scottsdale, the strong-community atmosphere of Chandler, or the up-and-coming energy of the West Valley, there's a perfect community waiting for you. Each area offers its own unique character, amenities, and opportunities to create the life you've always wanted in the Valley of the Sun.
+            {pageDescription}
           </p>
         </motion.div>
 

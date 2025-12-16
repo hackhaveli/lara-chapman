@@ -19,6 +19,7 @@ import AdminNeighborhoods from './pages/admin/AdminNeighborhoods'
 import NeighborhoodForm from './pages/admin/NeighborhoodForm'
 import AdminBuySell from './pages/admin/AdminBuySell'
 import AdminGeneral from './pages/admin/AdminGeneral'
+import AdminServices from './pages/admin/AdminServices'
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
           <Route path="neighborhoods/edit/:id" element={<NeighborhoodForm />} />
           <Route path="buy-sell" element={<AdminBuySell />} />
           <Route path="general" element={<AdminGeneral />} />
+          <Route path="services" element={<AdminServices />} />
         </Route>
 
         {/* Public Routes - With main Layout */}

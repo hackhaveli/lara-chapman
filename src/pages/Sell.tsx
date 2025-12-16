@@ -4,7 +4,7 @@ import { DollarSign, Camera, TrendingUp, FileText, Key, CheckCircle, ChevronDown
 import { usePageContent } from '../hooks/usePageContent';
 
 // Icon mapping for dynamic content
-const iconMap: { [key: string]: React.ComponentType<{ size?: number; className?: string }> } = {
+const iconMap: { [key: string]: any } = {
   FileText, Search, Eye, Key, Home, DollarSign, Camera, TrendingUp, CheckCircle, Star, Award, Target
 };
 
@@ -27,7 +27,7 @@ const Sell = () => {
     ? content.sell.marketingPoints
     : defaultSellerSteps;
 
-  const stagingGallery = [
+  const stagingGallery = content?.sell?.stagingGallery && content.sell.stagingGallery.length > 0 ? content.sell.stagingGallery : [
     {
       image: 'https://images.pexels.com/photos/2029695/pexels-photo-2029695.jpeg?auto=compress&cs=tinysrgb&w=800',
       room: 'Modern Kitchen',
@@ -50,7 +50,7 @@ const Sell = () => {
     },
   ];
 
-  const faqs = [
+  const faqs = content?.sell?.faqs && content.sell.faqs.length > 0 ? content.sell.faqs : [
     {
       question: 'How do you determine the right listing price for my home?',
       answer: 'I conduct a comprehensive market analysis looking at recent sales of similar homes, current market conditions, and your home\'s unique features. This data-driven approach ensures we price your home competitively to attract buyers while maximizing your return.'
@@ -71,18 +71,32 @@ const Sell = () => {
       question: 'Do you offer any guarantees?',
       answer: 'While I can\'t guarantee a specific sale price or timeline (as these depend on market conditions), I do guarantee professional service, transparent communication, and dedicated advocacy for your interests throughout the entire process.'
     }
-  ]
+  ];
+
+  const resources = content?.sell?.resources && content.sell.resources.length > 0 ? content.sell.resources : [];
 
   const toggleFAQ = (index: number) => {
     setOpenFAQ(openFAQ === index ? null : index)
   }
 
-  // Get dynamic intro content with fallbacks
+  // Get dynamic content with fallbacks
   const introTitle = content?.sell?.introTitle || 'Selling Your Home with Lara';
   const introText = content?.sell?.introText || 'Get top dollar for your home with strategic pricing, professional staging, and expert marketing that reaches qualified buyers.';
+  const stepsTitle = content?.sell?.stepsTitle || 'Your Home Selling Journey';
+  const stepsSubtitle = content?.sell?.stepsSubtitle || 'I guide you through every step of the selling process to maximize your home\'s value and minimize stress.';
   const stagingTitle = content?.sell?.stagingTitle || 'Staging Examples';
   const stagingSubtitle = content?.sell?.stagingSubtitle || 'See how professional staging transforms spaces to appeal to potential buyers.';
   const stagingCta = content?.sell?.stagingCta || 'Professional staging can help your home sell faster and for a higher price. As a certified home stager, I can help you prepare your home to make the best possible impression on buyers.';
+  const stagingButtonText = content?.sell?.stagingButtonText || 'Learn More About Staging Services';
+  const stagingButtonUrl = content?.sell?.stagingButtonUrl || 'https://styleandstaging.com';
+  const resourcesTitle = content?.sell?.resourcesTitle || 'Helpful Resources';
+  const resourcesSubtitle = content?.sell?.resourcesSubtitle || 'Download free guides and tools to help you prepare for selling your home.';
+  const faqTitle = content?.sell?.faqTitle || 'Frequently Asked Questions';
+  const faqSubtitle = content?.sell?.faqSubtitle || 'Get answers to common questions about selling your home in the Phoenix Valley.';
+  const ctaTitle = content?.sell?.ctaTitle || 'Ready to Sell Your Home?';
+  const ctaText = content?.sell?.ctaText || 'Get a free, no-obligation home value estimate and learn how I can help you achieve your selling goals.';
+  const ctaButtonText = content?.sell?.ctaButtonText || 'Request a Free Home Value Estimate Today';
+  const ctaButtonUrl = content?.sell?.ctaButtonUrl || 'https://www.highway.ai/app/homereport/register/dTfLtaKXS3?creationSource=signup_link';
 
   return (
     <div className="py-24 px-6">
@@ -108,9 +122,9 @@ const Sell = () => {
           className="mb-24"
         >
           <div className="text-center mb-16">
-            <h2 className="text-5xl font-bold text-[#333333] mb-6 font-serif">Your Home Selling Journey</h2>
+            <h2 className="text-5xl font-bold text-[#333333] mb-6 font-serif">{stepsTitle}</h2>
             <p className="text-xl text-[#555555] max-w-2xl mx-auto">
-              I guide you through every step of the selling process to maximize your home's value and minimize stress.
+              {stepsSubtitle}
             </p>
           </div>
 
@@ -196,12 +210,12 @@ const Sell = () => {
                 {stagingCta}
               </p>
               <a
-                href="https://styleandstaging.com"
+                href={stagingButtonUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-block bg-[#E76F51] hover:bg-[#E76F51]/90 text-white font-semibold py-3 px-8 rounded-full transition-all duration-300 hover:shadow-lg hover:scale-105"
               >
-                Learn More About Staging Services
+                {stagingButtonText}
               </a>
             </div>
           </div>
@@ -216,65 +230,65 @@ const Sell = () => {
           className="mb-24"
         >
           <div className="text-center mb-16">
-            <h2 className="text-5xl font-bold text-[#333333] mb-6 font-serif">Helpful Resources</h2>
+            <h2 className="text-5xl font-bold text-[#333333] mb-6 font-serif">{resourcesTitle}</h2>
             <p className="text-xl text-[#555555] max-w-2xl mx-auto">
-              Download free guides and tools to help you prepare for selling your home.
+              {resourcesSubtitle}
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 hover:scale-105 text-center flex flex-col"
-            >
-              <div className="bg-[#E76F51]/10 w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-6">
-                <FileText size={28} className="text-[#E76F51]" />
-              </div>
-              <h3 className="text-2xl font-bold text-[#333333] mb-4">Home Selling Guide</h3>
-              <p className="text-[#555555] mb-6 flex-grow">
-                Download my comprehensive guide to selling your home in the Phoenix Valley.
-              </p>
-              <button
-                onClick={() => {
-                  const link = document.createElement('a')
-                  link.href = '/sellers guide.pdf'
-                  link.download = 'sellers guide.pdf'
-                  document.body.appendChild(link)
-                  link.click()
-                  document.body.removeChild(link)
-                }}
-                className="inline-block bg-[#E76F51] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#E76F51]/90 transition-colors mt-auto"
-              >
-                Download Guide
-              </button>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 hover:scale-105 text-center flex flex-col"
-            >
-              <div className="bg-[#2A9D8F]/10 w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-6">
-                <DollarSign size={28} className="text-[#2A9D8F]" />
-              </div>
-              <h3 className="text-2xl font-bold text-[#333333] mb-4">Free Home Value Estimate</h3>
-              <p className="text-[#555555] mb-6 flex-grow">
-                Get an accurate estimate of your home's current market value.
-              </p>
-              <a
-                href="https://www.highway.ai/app/homereport/register/dTfLtaKXS3?creationSource=signup_link"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block bg-[#2A9D8F] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#2A9D8F]/90 transition-colors mt-auto"
-              >
-                Get Estimate
-              </a>
-            </motion.div>
+            {resources.map((resource, index) => {
+              const IconComponent = iconMap[resource.icon] || FileText;
+              return (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  className="bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 hover:scale-105 text-center flex flex-col"
+                >
+                  <div className="bg-[#E76F51]/10 w-16 h-16 rounded-xl flex items-center justify-center mx-auto mb-6">
+                    <IconComponent size={28} className="text-[#E76F51]" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-[#333333] mb-4">{resource.title}</h3>
+                  <p className="text-[#555555] mb-6 flex-grow">
+                    {resource.description}
+                  </p>
+                  {resource.isDownload ? (
+                    <button
+                      onClick={() => {
+                        const link = document.createElement('a')
+                        link.href = resource.buttonUrl
+                        link.download = resource.buttonUrl.replace('/', '')
+                        document.body.appendChild(link)
+                        link.click()
+                        document.body.removeChild(link)
+                      }}
+                      className="inline-block bg-[#E76F51] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#E76F51]/90 transition-colors mt-auto"
+                    >
+                      {resource.buttonText}
+                    </button>
+                  ) : resource.isExternal ? (
+                    <a
+                      href={resource.buttonUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block bg-[#2A9D8F] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#2A9D8F]/90 transition-colors mt-auto"
+                    >
+                      {resource.buttonText}
+                    </a>
+                  ) : (
+                    <a
+                      href={resource.buttonUrl}
+                      className="inline-block bg-[#2A9D8F] text-white px-6 py-3 rounded-xl font-semibold hover:bg-[#2A9D8F]/90 transition-colors mt-auto"
+                    >
+                      {resource.buttonText}
+                    </a>
+                  )}
+                </motion.div>
+              );
+            })}
           </div>
         </motion.section>
 
@@ -287,9 +301,9 @@ const Sell = () => {
           className="mb-24"
         >
           <div className="text-center mb-16">
-            <h2 className="text-5xl font-bold text-[#333333] mb-6 font-serif">Frequently Asked Questions</h2>
+            <h2 className="text-5xl font-bold text-[#333333] mb-6 font-serif">{faqTitle}</h2>
             <p className="text-xl text-[#555555] max-w-2xl mx-auto">
-              Get answers to common questions about selling your home in the Phoenix Valley.
+              {faqSubtitle}
             </p>
           </div>
 
@@ -339,17 +353,17 @@ const Sell = () => {
           className="text-center"
         >
           <div className="bg-[#E76F51] p-16 rounded-2xl text-white">
-            <h2 className="text-4xl font-bold mb-6 font-serif">Ready to Sell Your Home?</h2>
+            <h2 className="text-4xl font-bold mb-6 font-serif">{ctaTitle}</h2>
             <p className="text-xl mb-8 max-w-2xl mx-auto">
-              Get a free, no-obligation home value estimate and learn how I can help you achieve your selling goals.
+              {ctaText}
             </p>
             <a
-              href="https://www.highway.ai/app/homereport/register/dTfLtaKXS3?creationSource=signup_link"
+              href={ctaButtonUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block bg-white text-[#E76F51] px-12 py-4 rounded-xl font-semibold uppercase tracking-wide hover:bg-gray-50 transition-all duration-200 hover:scale-105 shadow-lg"
             >
-              Request a Free Home Value Estimate Today
+              {ctaButtonText}
             </a>
           </div>
         </motion.section>

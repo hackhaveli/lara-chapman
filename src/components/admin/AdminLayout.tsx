@@ -35,6 +35,7 @@ const AdminLayout: React.FC = () => {
         { path: '/admin/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
         { path: '/admin/neighborhoods', icon: Map, label: 'Neighborhoods' },
         { path: '/admin/buy-sell', icon: ShoppingCart, label: 'Buy & Sell Pages' },
+        { path: '/admin/services', icon: Tag, label: 'Services' },
         { path: '/admin/general', icon: Settings, label: 'General Pages' },
     ];
 
@@ -68,8 +69,8 @@ const AdminLayout: React.FC = () => {
                             key={item.path}
                             to={item.path}
                             className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive(item.path)
-                                    ? 'bg-[#E76F51] text-white'
-                                    : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                                ? 'bg-[#E76F51] text-white'
+                                : 'text-slate-400 hover:bg-slate-800 hover:text-white'
                                 }`}
                         >
                             <item.icon size={20} />
@@ -145,8 +146,8 @@ const AdminLayout: React.FC = () => {
                                     to={item.path}
                                     onClick={() => setMobileMenuOpen(false)}
                                     className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive(item.path)
-                                            ? 'bg-[#E76F51] text-white'
-                                            : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                                        ? 'bg-[#E76F51] text-white'
+                                        : 'text-slate-400 hover:bg-slate-800 hover:text-white'
                                         }`}
                                 >
                                     <item.icon size={20} />

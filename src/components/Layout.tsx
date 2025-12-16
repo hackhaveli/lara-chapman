@@ -17,14 +17,36 @@ import {
   Instagram,
   Twitter,
   Youtube,
-  Linkedin
+  Linkedin,
+  Clock
 } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
+import { usePageContent } from '../hooks/usePageContent'
+
+const getIconForLabel = (label: string) => {
+  const l = (label || '').toLowerCase();
+  if (l.includes('home')) return Home;
+  if (l.includes('about')) return User;
+  if (l.includes('buy') && !l.includes('guide')) return ShoppingCart;
+  if (l.includes('search')) return Search;
+  if (l.includes('sell')) return Building;
+  if (l.includes('neighborhood')) return MapPin;
+  if (l.includes('calc')) return Calculator;
+  if (l.includes('contact')) return Phone;
+  return FileText;
+}
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const location = useLocation()
+  const { content } = usePageContent()
+
+  const logoText = content?.header?.logoText || 'Lara Chapman'
+  const logoSubtext = content?.header?.logoSubtext || 'Realtor®'
+
+  // Dynamic Navigation Helper
+  const searchHomesUrl = content?.footer?.searchHomesUrl || 'https://search.blissrealtyinvestment.com/idx/search/advanced?agentHeaderID=15891149'
 
   useEffect(() => {
     const handleScroll = () => {
@@ -34,17 +56,25 @@ const Navigation = () => {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const navLinks = [
-    { to: '/', label: 'Home', icon: Home, external: false },
-    { to: '/about', label: 'About', icon: User, external: false },
-    { to: '/buy', label: 'Buy', icon: ShoppingCart, external: false },
-    { to: 'https://search.blissrealtyinvestment.com/idx/search/advanced?agentHeaderID=15891149', label: 'Search Homes', icon: Search, external: true },
-    { to: '/sell', label: 'Sell', icon: Building, external: false },
-    { to: '/neighborhoods', label: 'Neighborhoods', icon: Building, external: false },
-    { to: '/calculators', label: 'Calculators', icon: Calculator, external: false },
-    // { to: '/resources', label: 'Resources', icon: FileText },
-    { to: '/contact', label: 'Contact', icon: Phone, external: false },
-  ]
+  const menuItems = content?.header?.menuItems && content.header.menuItems.length > 0
+    ? content.header.menuItems
+    : [
+      { label: 'Home', path: '/', isExternal: false },
+      { label: 'About', path: '/about', isExternal: false },
+      { label: 'Buy', path: '/buy', isExternal: false },
+      { label: 'Search Homes', path: searchHomesUrl, isExternal: true },
+      { label: 'Sell', path: '/sell', isExternal: false },
+      { label: 'Neighborhoods', path: '/neighborhoods', isExternal: false },
+      { label: 'Calculators', path: '/calculators', isExternal: false },
+      { label: 'Contact', path: '/contact', isExternal: false }
+    ];
+
+  const navLinks = menuItems.map(item => ({
+    to: item.path,
+    label: item.label,
+    icon: getIconForLabel(item.label),
+    external: item.isExternal
+  }));
 
   return (
     <motion.nav
@@ -61,10 +91,10 @@ const Navigation = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <div className="text-2xl font-bold font-serif text-[#E76F51]">
-              Lara Chapman
+              {logoText}
             </div>
             <div className="text-sm text-[#555555] font-medium">
-              Realtor®
+              {logoSubtext}
             </div>
           </Link>
 
@@ -153,6 +183,54 @@ const Navigation = () => {
 }
 
 const Footer = () => {
+  const { content } = usePageContent()
+
+  const footerLogoText = content?.footer?.logoText || 'Lara Chapman'
+  const footerTagline = content?.footer?.tagline || 'Realtor®, investor, and home stager helping Phoenix Valley clients buy and sell with confidence.'
+  const copyrightText = content?.footer?.copyrightText || '© 2025 Lara Chapman, Realtor | Bliss Realty'
+  const disclaimerText = content?.footer?.disclaimerText || 'The data relating to real estate for sale on this web site comes in part from the Internet Data Exchange (IDX) program...'
+
+  const facebookUrl = content?.contact?.facebookUrl || 'https://www.facebook.com/LaraLovesPhoenix'
+  const instagramUrl = content?.contact?.instagramUrl || 'https://www.instagram.com/laralovesphoenix/'
+  const twitterUrl = content?.contact?.twitterUrl || 'https://x.com/larablissr1'
+  const youtubeUrl = content?.contact?.youtubeUrl || 'https://www.youtube.com/@LaraLovesPhoenix'
+  const linkedinUrl = content?.contact?.linkedinUrl || 'https://www.linkedin.com/in/lara-chapman-b4b025357/'
+
+  const email = content?.footer?.email || content?.contact?.email || 'KeysPlease@LaraLovesPhoenix.com'
+  const phone = content?.footer?.phone || content?.contact?.phone || '(602) 405-8002'
+  const address = content?.footer?.address || content?.contact?.address || 'Phoenix, Arizona'
+  const officeHours = content?.footer?.officeHours || content?.contact?.officeHours || 'Monday - Friday: 9:00 AM - 6:00 PM'
+
+  const quickLinksTitle = content?.footer?.quickLinksTitle || 'Quick Links'
+  const resourcesTitle = content?.footer?.resourcesTitle || 'Resources'
+  const contactTitle = content?.footer?.contactTitle || 'Contact Me'
+  const consultationButtonText = content?.footer?.consultationButtonText || 'Schedule a Consultation'
+
+  // Dynamic Lists with Defaults
+  const quickLinks = content?.footer?.quickLinks && content.footer.quickLinks.length > 0
+    ? content.footer.quickLinks
+    : [
+      { label: 'Home', path: '/', isExternal: false },
+      { label: 'About Lara', path: '/about', isExternal: false },
+      { label: 'Buy a Home', path: '/buy', isExternal: false },
+      { label: 'Search Homes', path: 'https://search.blissrealtyinvestment.com/idx/search/advanced?agentHeaderID=15891149', isExternal: true },
+      { label: 'Sell Your Home', path: '/sell', isExternal: false },
+      { label: 'Neighborhoods', path: '/neighborhoods', isExternal: false }
+    ];
+
+  const resourceLinks = content?.footer?.resourceLinks && content.footer.resourceLinks.length > 0
+    ? content.footer.resourceLinks
+    : [
+      { label: 'Mortgage Calculators', path: '/calculators', isExternal: false },
+      { label: 'Buyer & Seller Guides', path: '#', isExternal: false },
+      { label: 'Home Staging Services', path: 'https://styleandstaging.com', isExternal: true },
+      { label: 'Investment Properties', path: 'https://orangedoorinvestmentgroup.com', isExternal: true }
+    ];
+
+  const privacyPolicyLinkText = content?.footer?.privacyPolicyLinkText || 'Privacy Policy'
+  const termsLinkText = content?.footer?.termsLinkText || 'Terms of Use'
+  const accessibilityLinkText = content?.footer?.accessibilityLinkText || 'Accessibility'
+
   return (
     <footer className="bg-[#2A9D8F] text-white py-16">
       <div className="max-w-7xl mx-auto px-6">
@@ -160,57 +238,17 @@ const Footer = () => {
           {/* Logo & Tagline */}
           <div className="col-span-2 md:col-span-1">
             <div className="text-2xl font-bold font-serif mb-4">
-              Lara Chapman
+              {footerLogoText}
             </div>
             <p className="text-white/90 mb-6">
-              Realtor®, investor, and home stager helping Phoenix Valley clients buy and sell with confidence.
+              {footerTagline}
             </p>
             <div className="flex space-x-4">
-              <a
-                href="https://www.facebook.com/LaraLovesPhoenix"
-                target="_blank"
-                rel="noopener noreferrer nofollow"
-                className="bg-white/10 hover:bg-white/20 p-2 rounded-full transition-colors"
-                aria-label="Facebook"
-              >
-                <Facebook size={20} />
-              </a>
-              <a
-                href="https://www.instagram.com/laralovesphoenix/"
-                target="_blank"
-                rel="noopener noreferrer nofollow"
-                className="bg-white/10 hover:bg-white/20 p-2 rounded-full transition-colors"
-                aria-label="Instagram"
-              >
-                <Instagram size={20} />
-              </a>
-              <a
-                href="https://x.com/larablissr1"
-                target="_blank"
-                rel="noopener noreferrer nofollow"
-                className="bg-white/10 hover:bg-white/20 p-2 rounded-full transition-colors"
-                aria-label="X (formerly Twitter)"
-              >
-                <Twitter size={20} />
-              </a>
-              <a
-                href="https://www.youtube.com/@LaraLovesPhoenix"
-                target="_blank"
-                rel="noopener noreferrer nofollow"
-                className="bg-white/10 hover:bg-white/20 p-2 rounded-full transition-colors"
-                aria-label="YouTube"
-              >
-                <Youtube size={20} />
-              </a>
-              <a
-                href="https://www.linkedin.com/in/lara-chapman-b4b025357/"
-                target="_blank"
-                rel="noopener noreferrer nofollow"
-                className="bg-white/10 hover:bg-white/20 p-2 rounded-full transition-colors"
-                aria-label="LinkedIn"
-              >
-                <Linkedin size={20} />
-              </a>
+              <a href={facebookUrl} target="_blank" rel="noopener noreferrer nofollow" className="bg-white/10 hover:bg-white/20 p-2 rounded-full transition-colors" aria-label="Facebook"><Facebook size={20} /></a>
+              <a href={instagramUrl} target="_blank" rel="noopener noreferrer nofollow" className="bg-white/10 hover:bg-white/20 p-2 rounded-full transition-colors" aria-label="Instagram"><Instagram size={20} /></a>
+              <a href={twitterUrl} target="_blank" rel="noopener noreferrer nofollow" className="bg-white/10 hover:bg-white/20 p-2 rounded-full transition-colors" aria-label="X (formerly Twitter)"><Twitter size={20} /></a>
+              <a href={youtubeUrl} target="_blank" rel="noopener noreferrer nofollow" className="bg-white/10 hover:bg-white/20 p-2 rounded-full transition-colors" aria-label="YouTube"><Youtube size={20} /></a>
+              <a href={linkedinUrl} target="_blank" rel="noopener noreferrer nofollow" className="bg-white/10 hover:bg-white/20 p-2 rounded-full transition-colors" aria-label="LinkedIn"><Linkedin size={20} /></a>
             </div>
           </div>
 
@@ -218,27 +256,21 @@ const Footer = () => {
           <div>
             <h3 className="font-bold text-lg mb-4 flex items-center">
               <span className="w-1 h-6 bg-[#E76F51] mr-2"></span>
-              Quick Links
+              {quickLinksTitle}
             </h3>
             <div className="space-y-3">
-              <Link to="/" className="flex items-center text-white/80 hover:text-white transition-colors">
-                <Home size={16} className="mr-2" /> Home
-              </Link>
-              <Link to="/about" className="flex items-center text-white/80 hover:text-white transition-colors">
-                <User size={16} className="mr-2" /> About
-              </Link>
-              <Link to="/buy" className="flex items-center text-white/80 hover:text-white transition-colors">
-                <ShoppingCart size={16} className="mr-2" /> Buy a Home
-              </Link>
-              <a href="https://search.blissrealtyinvestment.com/idx/search/advanced?agentHeaderID=15891149" target="_blank" rel="noopener noreferrer" className="flex items-center text-white/80 hover:text-white transition-colors">
-                <Search size={16} className="mr-2" /> Search Homes
-              </a>
-              <Link to="/sell" className="flex items-center text-white/80 hover:text-white transition-colors">
-                <Building size={16} className="mr-2" /> Sell Your Home
-              </Link>
-              <Link to="/neighborhoods" className="flex items-center text-white/80 hover:text-white transition-colors">
-                <MapPin size={16} className="mr-2" /> Neighborhoods
-              </Link>
+              {quickLinks.map((link, idx) => {
+                const Icon = getIconForLabel(link.label);
+                return link.isExternal ? (
+                  <a key={idx} href={link.path} target="_blank" rel="noopener noreferrer" className="flex items-center text-white/80 hover:text-white transition-colors">
+                    <Icon size={16} className="mr-2" /> {link.label}
+                  </a>
+                ) : (
+                  <Link key={idx} to={link.path} className="flex items-center text-white/80 hover:text-white transition-colors">
+                    <Icon size={16} className="mr-2" /> {link.label}
+                  </Link>
+                );
+              })}
             </div>
           </div>
 
@@ -246,82 +278,75 @@ const Footer = () => {
           <div>
             <h3 className="font-bold text-lg mb-4 flex items-center">
               <span className="w-1 h-6 bg-[#E76F51] mr-2"></span>
-              Resources
+              {resourcesTitle}
             </h3>
             <div className="space-y-3">
-              <Link to="/calculators" className="flex items-center text-white/80 hover:text-white transition-colors">
-                <Calculator size={16} className="mr-2" /> Calculators
-              </Link>
-              <Link to="/resources" className="flex items-center text-white/80 hover:text-white transition-colors">
-                <FileText size={16} className="mr-2" /> Buyer & Seller Guides
-              </Link>
-              <a
-                href="https://styleandstaging.com"
-                target="_blank"
-                rel="noopener noreferrer nofollow"
-                className="flex items-center text-white/80 hover:text-white transition-colors"
-              >
-                <Home size={16} className="mr-2" /> Home Staging Services
-              </a>
-              <a
-                href="https://orangedoorinvestmentgroup.com"
-                target="_blank"
-                rel="noopener noreferrer nofollow"
-                className="flex items-center text-white/80 hover:text-white transition-colors"
-              >
-                <Building size={16} className="mr-2" /> Investment Properties
-              </a>
+              {resourceLinks.map((link, idx) => {
+                const Icon = getIconForLabel(link.label);
+                return link.isExternal ? (
+                  <a key={idx} href={link.path} target="_blank" rel="noopener noreferrer" className="flex items-center text-white/80 hover:text-white transition-colors">
+                    <Icon size={16} className="mr-2" /> {link.label}
+                  </a>
+                ) : (
+                  <Link key={idx} to={link.path} className="flex items-center text-white/80 hover:text-white transition-colors">
+                    <Icon size={16} className="mr-2" /> {link.label}
+                  </Link>
+                );
+              })}
             </div>
           </div>
 
-          {/* Contact Info */}
+          {/* Contact */}
           <div>
             <h3 className="font-bold text-lg mb-4 flex items-center">
               <span className="w-1 h-6 bg-[#E76F51] mr-2"></span>
-              Contact Me
+              {contactTitle}
             </h3>
-            <div className="space-y-4 text-white/80">
+            <div className="space-y-4">
+              {/* Address */}
               <div className="flex items-start">
-                <MapPin size={18} className="mt-1 mr-3 flex-shrink-0" />
-                <p>Phoenix, Arizona<br />Serving the entire Phoenix Valley</p>
+                <MapPin size={20} className="mr-3 mt-1 text-[#E76F51]" />
+                <span className="text-white/80">{address}</span>
               </div>
-              <a href="mailto:KeysPlease@LaraLovesPhoenix.com" className="flex items-center hover:text-white transition-colors">
-                <Mail size={18} className="mr-3 flex-shrink-0" />
-                KeysPlease@LaraLovesPhoenix.com
-              </a>
-              <a href="tel:602-405-8002" className="flex items-center hover:text-white transition-colors">
-                <Phone size={18} className="mr-3 flex-shrink-0" />
-                (602) 405-8002
-              </a>
-              <Link
-                to="/contact"
-                onClick={() => window.scrollTo(0, 0)}
-                className="inline-block mt-4 bg-[#E76F51] hover:bg-[#E76F51]/90 text-white font-semibold py-2 px-6 rounded-full transition-all duration-300 hover:shadow-lg"
-              >
-                Schedule a Consultation
+
+              {/* Hours */}
+              <div className="flex items-start">
+                <Clock size={20} className="mr-3 mt-1 text-[#E76F51]" />
+                <span className="text-white/80">{officeHours}</span>
+              </div>
+
+              {/* Email */}
+              <div className="flex items-center">
+                <Mail size={20} className="mr-3 text-[#E76F51]" />
+                <a href={`mailto:${email}`} className="text-white/80 hover:text-white transition-colors">{email}</a>
+              </div>
+
+              {/* Phone */}
+              <div className="flex items-center">
+                <Phone size={20} className="mr-3 text-[#E76F51]" />
+                <a href={`tel:${phone.replace(/\D/g, '')}`} className="text-white/80 hover:text-white transition-colors">{phone}</a>
+              </div>
+
+              <Link to="/contact" className="inline-block bg-[#E76F51] text-white px-6 py-2 rounded-full font-medium hover:bg-[#D65D40] transition-colors mt-2">
+                {consultationButtonText}
               </Link>
             </div>
           </div>
         </div>
 
-        <div className="border-t border-white/20 mt-12 pt-8 text-center text-white/60 text-sm">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <p> 2025 Lara Chapman, Realtor | Bliss Realty</p>
-            <div className="mt-4 md:mt-0 space-x-4">
-              <Link to="/privacy-policy" className="hover:text-white transition-colors">
-                Privacy Policy
-              </Link>
-              <Link to="/terms" className="hover:text-white transition-colors">
-                Terms of Use
-              </Link>
-              <Link to="/accessibility" className="hover:text-white transition-colors">
-                Accessibility
-              </Link>
-            </div>
+        {/* Bottom Bar */}
+        <div className="border-t border-white/10 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-white/60">
+          <p className="mb-4 md:mb-0">{copyrightText}</p>
+          <div className="flex space-x-6">
+            <Link to="/privacy" className="hover:text-white transition-colors">{privacyPolicyLinkText}</Link>
+            <Link to="/terms" className="hover:text-white transition-colors">{termsLinkText}</Link>
+            <Link to="/accessibility" className="hover:text-white transition-colors">{accessibilityLinkText}</Link>
           </div>
-          <p className="mt-4 text-xs">
-            The data relating to real estate for sale on this web site comes in part from the Internet Data Exchange (IDX) program of the Arizona Regional Multiple Listing Service, Inc. Real estate listings held by brokerage firms other than Bliss Realty are marked with the IDX logo. Information about a property's sale history, including the listing and sale prices, may be found on the property details page. All information provided is deemed reliable but is not guaranteed and should be independently verified. Some properties which appear for sale on this web site may subsequently have sold and may no longer be available. The listing broker's offer of compensation is made only to participants of the MLS where the listing is filed.
-          </p>
+        </div>
+
+        {/* Disclaimer */}
+        <div className="mt-8 pt-8 border-t border-white/10 text-xs text-white/40 text-center">
+          <p>{disclaimerText}</p>
         </div>
       </div>
     </footer>

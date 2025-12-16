@@ -346,6 +346,12 @@ const Calculators = () => {
   const title = content?.calculators?.pageTitle || 'Mortgage Calculators';
   const intro = content?.calculators?.mortgageIntroText || 'Estimate your payments, affordability, and more with our easy-to-use mortgage calculators.';
   const disclaimer = content?.calculators?.disclaimer || 'These calculators are for informational purposes only and do not constitute financial advice.';
+  const partnerSectionTitle = content?.calculators?.partnerSectionTitle || 'Additional Calculators from Our Partner';
+  const partnerBoxTitle = content?.calculators?.partnerBoxTitle || 'Visit Our Partner\'s Calculators';
+  const partnerDescription = content?.calculators?.partnerDescription || 'For additional mortgage calculators, please visit our trusted partner Barrett Financial\'s website. You may be asked to complete a quick verification to access their tools.';
+  const partnerButtonText = content?.calculators?.partnerButtonText || 'Visit Barrett Financial Calculators';
+  const partnerButtonUrl = content?.calculators?.partnerButtonUrl || 'https://www.barrettfinancial.com/mortgage-calculators';
+  const partnerFooterText = content?.calculators?.partnerFooterText || 'These calculators are provided by our trusted lending partner, Barrett Financial Group. You\'ll be redirected to their website to use their tools.';
 
   return (
     <div className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50 min-h-screen">
@@ -422,22 +428,21 @@ const Calculators = () => {
         </div>
 
         <div className="mt-12">
-          <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">Additional Calculators from Our Partner</h3>
+          <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">{partnerSectionTitle}</h3>
           <div className="bg-white p-8 rounded-xl shadow-md text-center">
             <div className="max-w-2xl mx-auto">
               <div className="bg-blue-50 p-6 rounded-lg mb-6">
-                <h4 className="text-lg font-semibold text-blue-800 mb-2">Visit Our Partner's Calculators</h4>
+                <h4 className="text-lg font-semibold text-blue-800 mb-2">{partnerBoxTitle}</h4>
                 <p className="text-gray-600 mb-4">
-                  For additional mortgage calculators, please visit our trusted partner Barrett Financial's website.
-                  You may be asked to complete a quick verification to access their tools.
+                  {partnerDescription}
                 </p>
                 <a
-                  href="https://www.barrettfinancial.com/mortgage-calculators"
+                  href={partnerButtonUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 >
-                  <span>Visit Barrett Financial Calculators</span>
+                  <span>{partnerButtonText}</span>
                   <svg className="ml-2 -mr-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                     <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
                     <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
@@ -445,8 +450,7 @@ const Calculators = () => {
                 </a>
               </div>
               <p className="text-sm text-gray-500">
-                These calculators are provided by our trusted lending partner, Barrett Financial Group.
-                You'll be redirected to their website to use their tools.
+                {partnerFooterText}
               </p>
             </div>
           </div>

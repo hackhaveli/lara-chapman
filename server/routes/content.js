@@ -29,7 +29,7 @@ router.get('/', async (req, res) => {
 router.get('/:section', async (req, res) => {
     try {
         const { section } = req.params;
-        const validSections = ['home', 'about', 'buy', 'sell', 'calculators', 'contact'];
+        const validSections = ['home', 'about', 'buy', 'sell', 'neighborhoods', 'calculators', 'contact', 'header', 'footer', 'resources'];
 
         if (!validSections.includes(section)) {
             return res.status(400).json({
@@ -61,7 +61,7 @@ router.put('/', adminAuth, async (req, res) => {
         const content = await SiteContent.getSingleton();
 
         // Update each section if provided
-        const sections = ['home', 'about', 'buy', 'sell', 'calculators', 'contact'];
+        const sections = ['home', 'about', 'buy', 'sell', 'neighborhoods', 'calculators', 'contact', 'header', 'footer', 'resources'];
         sections.forEach(section => {
             if (req.body[section]) {
                 content[section] = { ...content[section].toObject(), ...req.body[section] };
@@ -91,7 +91,7 @@ router.put('/', adminAuth, async (req, res) => {
 router.put('/:section', adminAuth, async (req, res) => {
     try {
         const { section } = req.params;
-        const validSections = ['home', 'about', 'buy', 'sell', 'calculators', 'contact'];
+        const validSections = ['home', 'about', 'buy', 'sell', 'neighborhoods', 'calculators', 'contact', 'header', 'footer', 'resources'];
 
         if (!validSections.includes(section)) {
             return res.status(400).json({

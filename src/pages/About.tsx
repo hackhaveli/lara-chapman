@@ -78,15 +78,21 @@ Today, I combine all these experiences as a full-service Realtor® with Bliss Re
           >
             <div className="bg-gradient-to-br from-[#E76F51]/20 to-[#2A9D8F]/20 p-8 rounded-2xl">
               <img
-                src="/profile.jpg"
-                alt="Lara Chapman, Realtor"
+                src={content?.about?.profileImage || "/profile.jpg"}
+                alt={content?.about?.profileName || "Lara Chapman, Realtor"}
                 className="w-full max-w-md mx-auto rounded-2xl shadow-xl"
               />
             </div>
             <div className="mt-8 space-y-2">
-              <h3 className="text-2xl font-bold text-[#333333]">Lara Chapman</h3>
-              <p className="text-[#E76F51] font-semibold">Realtor® | Investor | Home Stager</p>
-              <p className="text-[#555555]">Bliss Realty</p>
+              <h3 className="text-2xl font-bold text-[#333333]">
+                {content?.about?.profileName || 'Lara Chapman'}
+              </h3>
+              <p className="text-[#E76F51] font-semibold">
+                {content?.about?.profileTitle || 'Realtor® | Investor | Home Stager'}
+              </p>
+              <p className="text-[#555555]">
+                {content?.about?.profileCompany || 'Bliss Realty'}
+              </p>
             </div>
           </motion.div>
         </div>
@@ -101,7 +107,7 @@ Today, I combine all these experiences as a full-service Realtor® with Bliss Re
         >
           <div className="relative rounded-2xl overflow-hidden shadow-xl">
             <img
-              src="https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=1200"
+              src={content?.about?.lifestyleImage || "https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&w=1200"}
               alt="Phoenix Valley Lifestyle"
               className="w-full h-96 object-cover"
             />
