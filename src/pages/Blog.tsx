@@ -31,7 +31,6 @@ const Blog: React.FC = () => {
 
     useEffect(() => {
         let filtered = posts;
-        console.log('[Filter] Starting with posts:', posts.length);
 
         if (searchTerm) {
             filtered = filtered.filter(post =>
@@ -39,15 +38,12 @@ const Blog: React.FC = () => {
                 post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 post.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
             );
-            console.log('[Filter] After search term filter:', filtered.length);
         }
 
         if (selectedCategory !== 'all') {
             filtered = filtered.filter(post => post.category === selectedCategory);
-            console.log('[Filter] After category filter:', filtered.length, 'category:', selectedCategory);
         }
 
-        console.log('[Filter] Final filtered posts:', filtered.length);
         setFilteredPosts(filtered);
         setCurrentPage(1);
     }, [posts, searchTerm, selectedCategory]);
@@ -55,18 +51,13 @@ const Blog: React.FC = () => {
     const fetchPosts = async () => {
         setLoading(true);
         try {
-            console.log('Fetching blog posts...');
             const response = await getBlogPosts({
                 status: 'published',
                 sort: '-publishedAt',
                 limit: 100
             });
-            console.log('API Response:', response);
             if (response.success && response.data) {
-                console.log('Posts received:', response.data.posts);
                 setPosts(response.data.posts);
-            } else {
-                console.error('API call succeeded but no data:', response);
             }
         } catch (error) {
             console.error('Failed to fetch blog posts:', error);
@@ -81,16 +72,7 @@ const Blog: React.FC = () => {
     const currentPosts = filteredPosts?.slice(indexOfFirstPost, indexOfLastPost) || [];
     const totalPages = Math.ceil((filteredPosts?.length || 0) / postsPerPage);
 
-    console.log('[Pagination] filteredPosts:', filteredPosts?.length);
-    console.log('[Pagination] currentPage:', currentPage, 'postsPerPage:', postsPerPage);
-    console.log('[Pagination] currentPosts:', currentPosts.length);
-    console.log('[Pagination] currentPosts data:', currentPosts);
 
-    // Debug effect to track rendering
-    useEffect(() => {
-        console.log('[Render] Component rendered with currentPosts:', currentPosts.length);
-        console.log('[Render] Posts data:', currentPosts);
-    }, [currentPosts, filteredPosts]);
 
     const handlePageChange = (pageNumber: number) => {
         setCurrentPage(pageNumber);
@@ -161,12 +143,6 @@ const Blog: React.FC = () => {
                             </button>
                         ))}
                     </div>
-                </div>
-
-                {/* Debug Info */}
-                <div className="bg-yellow-500/20 border border-yellow-500 rounded-lg p-4 mb-8">
-                    <p className="text-white">Debug: Posts: {posts.length}, Filtered: {filteredPosts.length}, Current: {currentPosts.length}</p>
-                    <p className="text-white text-sm">Loading: {loading ? 'Yes' : 'No'}</p>
                 </div>
 
                 {/* Blog Posts Grid */}

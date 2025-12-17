@@ -463,19 +463,11 @@ export const getBlogPosts = async (params?: {
         }
 
         const url = `${API_BASE_URL}/blog${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
-        console.log('[API] Fetching from URL:', url);
-        console.log('[API] API_BASE_URL:', API_BASE_URL);
-
         const response = await fetch(url, {
             headers: createHeaders(),
         });
 
-        console.log('[API] Response status:', response.status);
-        console.log('[API] Response ok:', response.ok);
-
         const data = await response.json();
-        console.log('[API] Response data:', data);
-
         return data; // Backend already returns { success, data } format
     } catch (error) {
         console.error('[API] Error fetching blog posts:', error);
