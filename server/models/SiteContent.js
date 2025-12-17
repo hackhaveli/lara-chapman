@@ -685,6 +685,90 @@ const siteContentSchema = new mongoose.Schema({
         resource4Title: { type: String, default: 'Monsoon Prep Tips - Protecting Your Phoenix Home' },
         resource4Description: { type: String, default: 'Essential maintenance for roof/gutters, yard, AC, and flood safety during monsoon season.' },
         resource4Url: { type: String, default: '/Monsoon_Prep_Tips.pdf' }
+    },
+
+    // Blog Page Content
+    blog: {
+        pageTitle: {
+            type: String,
+            default: 'Real Estate Insights & Tips'
+        },
+        pageSubtitle: {
+            type: String,
+            default: 'Stay informed with the latest market trends, home buying guides, and expert advice from Lara Chapman'
+        },
+        heroBackgroundColor: {
+            type: String,
+            default: 'from-purple-600/20 to-pink-600/20'
+        },
+        defaultAuthorName: {
+            type: String,
+            default: 'Lara Chapman'
+        },
+        defaultAuthorImage: {
+            type: String,
+            default: '/profile.jpg'
+        },
+        defaultAuthorBio: {
+            type: String,
+            default: 'Lara Chapman is a dedicated real estate professional serving the Phoenix Valley. With years of experience and a passion for helping clients achieve their real estate dreams, Lara provides expert guidance through every step of the buying, selling, and investing process.'
+        },
+        defaultAuthorTitle: {
+            type: String,
+            default: 'Real Estate Expert'
+        },
+        ctaTitle: {
+            type: String,
+            default: 'Ready to Take the Next Step?'
+        },
+        ctaDescription: {
+            type: String,
+            default: 'Whether you\'re buying, selling, or investing in the Phoenix Valley, I\'m here to help you succeed.'
+        },
+        ctaButton1Text: {
+            type: String,
+            default: 'Schedule a Consultation'
+        },
+        ctaButton1Url: {
+            type: String,
+            default: '/contact'
+        },
+        ctaButton2Text: {
+            type: String,
+            default: 'Read More Articles'
+        },
+        ctaButton2Url: {
+            type: String,
+            default: '/blog'
+        },
+        postsPerPage: {
+            type: Number,
+            default: 9
+        },
+        showCategories: {
+            type: Boolean,
+            default: true
+        },
+        showTags: {
+            type: Boolean,
+            default: true
+        },
+        showReadTime: {
+            type: Boolean,
+            default: true
+        },
+        showAuthorInfo: {
+            type: Boolean,
+            default: true
+        },
+        enableSearch: {
+            type: Boolean,
+            default: true
+        },
+        enableSocialShare: {
+            type: Boolean,
+            default: true
+        }
     }
 }, {
     timestamps: true,

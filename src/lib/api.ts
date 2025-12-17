@@ -396,6 +396,174 @@ export const deleteNeighborhood = async (id: string): Promise<ApiResponse<null>>
     }
 };
 
+// ============ BLOG API ============
+
+export interface BlogPost {
+    _id: string;
+    title: string;
+    slug: string;
+    excerpt: string;
+    content: string;
+    featuredImage: string;
+    category: 'Market Updates' | 'Home Buying Tips' | 'Home Selling Tips' | 'Neighborhoods' | 'Investment' | 'Lifestyle' | 'Real Estate News';
+    tags: string[];
+    author: {
+        name: string;
+        image: string;
+    };
+    status: 'draft' | 'published';
+    publishedAt?: Date;
+    readTime: number;
+    seo: {
+        metaTitle?: string;
+        metaDescription?: string;
+        keywords?: string[];
+    };
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface BlogPostInput {
+    title: string;
+    slug?: string;
+    excerpt: string;
+    content: string;
+    featuredImage: string;
+    category: string;
+    tags?: string[];
+    author?: {
+        name?: string;
+        image?: string;
+    };
+    status?: 'draft' | 'published';
+    seo?: {
+        metaTitle?: string;
+        metaDescription?: string;
+        keywords?: string[];
+    };
+}
+
+// Get all blog posts
+export const getBlogPosts = async (params?: {
+    status?: 'draft' | 'published' | 'all';
+    category?: string;
+    tag?: string;
+    page?: number;
+    limit?: number;
+    sort?: string;
+}): Promise<ApiResponse<{ posts: BlogPost[]; pagination: any }>> => {
+    try {
+        const queryParams = new URLSearchParams();
+        if (params) {
+            Object.entries(params).forEach(([key, value]) => {
+                if (value !== undefined) {
+                    queryParams.append(key, value.toString());
+                }
+            });
+        }
+
+        const url = `${API_BASE_URL}/blog${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+        const response = await fetch(url, {
+            headers: createHeaders(),
+        });
+        return await response.json(); // Backend already returns { success, data } format
+    } catch (error) {
+        return { success: false, message: 'Failed to fetch blog posts' };
+    }
+};
+
+// Get single blog post by slug
+export const getBlogPostBySlug = async (slug: string): Promise<ApiResponse<BlogPost>> => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/blog/slug/${slug}`, {
+            headers: createHeaders(),
+        });
+        return await response.json();
+    } catch (error) {
+        return { success: false, message: 'Failed to fetch blog post' };
+    }
+};
+
+// Get single blog post by ID
+// Get single blog post by ID
+export const getBlogPostById = async (id: string): Promise<ApiResponse<BlogPost>> => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/blog/${id}`, {
+            headers: createHeaders(true),
+        });
+        return await response.json();
+    } catch (error) {
+        return { success: false, message: 'Failed to fetch blog post' };
+    }
+};
+
+// Create blog post
+export const createBlogPost = async (data: BlogPostInput): Promise<ApiResponse<BlogPost>> => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/blog`, {
+            method: 'POST',
+            headers: createHeaders(true),
+            body: JSON.stringify(data),
+        });
+        return await response.json();
+    } catch (error) {
+        return { success: false, message: 'Failed to create blog post' };
+    }
+};
+
+// Update blog post
+export const updateBlogPost = async (id: string, data: Partial<BlogPostInput>): Promise<ApiResponse<BlogPost>> => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/blog/${id}`, {
+            method: 'PUT',
+            headers: createHeaders(true),
+            body: JSON.stringify(data),
+        });
+        return await response.json();
+    } catch (error) {
+        return { success: false, message: 'Failed to update blog post' };
+    }
+};
+
+// Delete blog post
+export const deleteBlogPost = async (id: string): Promise<ApiResponse<null>> => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/blog/${id}`, {
+            method: 'DELETE',
+            headers: createHeaders(true),
+        });
+        return await response.json();
+    } catch (error) {
+        return { success: false, message: 'Failed to delete blog post' };
+    }
+};
+
+// Get blog categories
+export const getBlogCategories = async (): Promise<ApiResponse<string[]>> => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/blog/meta/categories`, {
+            headers: createHeaders(),
+        });
+        const data = await response.json();
+        return { success: true, data };
+    } catch (error) {
+        return { success: false, message: 'Failed to fetch categories' };
+    }
+};
+
+// Get blog tags
+export const getBlogTags = async (): Promise<ApiResponse<string[]>> => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/blog/meta/tags`, {
+            headers: createHeaders(),
+        });
+        const data = await response.json();
+        return { success: true, data };
+    } catch (error) {
+        return { success: false, message: 'Failed to fetch tags' };
+    }
+};
+
 export default {
     login,
     setAuthToken,

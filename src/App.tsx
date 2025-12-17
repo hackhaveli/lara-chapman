@@ -20,6 +20,11 @@ import NeighborhoodForm from './pages/admin/NeighborhoodForm'
 import AdminBuySell from './pages/admin/AdminBuySell'
 import AdminGeneral from './pages/admin/AdminGeneral'
 import AdminServices from './pages/admin/AdminServices'
+import AdminBlog from './pages/admin/AdminBlog'
+
+// Blog imports
+import Blog from './pages/Blog'
+import BlogPost from './pages/BlogPost'
 
 function App() {
   return (
@@ -36,6 +41,7 @@ function App() {
           <Route path="buy-sell" element={<AdminBuySell />} />
           <Route path="general" element={<AdminGeneral />} />
           <Route path="services" element={<AdminServices />} />
+          <Route path="blog" element={<AdminBlog />} />
         </Route>
 
         {/* Public Routes - With main Layout */}
@@ -48,6 +54,8 @@ function App() {
         <Route path="/neighborhoods/:slug" element={<Layout><Neighborhoods /></Layout>} />
         <Route path="/calculators" element={<Layout><Calculators /></Layout>} />
         <Route path="/resources" element={<Layout><Resources /></Layout>} />
+        <Route path="/blog" element={<Layout><Blog /></Layout>} />
+        <Route path="/blog/:slug" element={<Layout><BlogPost /></Layout>} />
         <Route path="/contact" element={<Layout><Contact /></Layout>} />
       </Routes>
     </Router>

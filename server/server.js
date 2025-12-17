@@ -31,6 +31,7 @@ app.post('/api/auth/login', verifyLogin);
 // API Routes
 app.use('/api/content', require('./routes/content'));
 app.use('/api/neighborhoods', require('./routes/neighborhoods'));
+app.use('/api/blog', require('./routes/blog'));
 
 // 404 handler
 app.use((req, res) => {

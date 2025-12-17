@@ -10,7 +10,8 @@ import {
     LogOut,
     Home,
     Menu,
-    X
+    X,
+    FileText
 } from 'lucide-react';
 import { isAuthenticated, removeAuthToken } from '../../lib/api';
 
@@ -34,6 +35,7 @@ const AdminLayout: React.FC = () => {
     const navItems = [
         { path: '/admin/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
         { path: '/admin/neighborhoods', icon: Map, label: 'Neighborhoods' },
+        { path: '/admin/blog', icon: FileText, label: 'Blog' },
         { path: '/admin/buy-sell', icon: ShoppingCart, label: 'Buy & Sell Pages' },
         { path: '/admin/services', icon: Tag, label: 'Services' },
         { path: '/admin/general', icon: Settings, label: 'General Pages' },
