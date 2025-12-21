@@ -21,6 +21,8 @@ import AdminBuySell from './pages/admin/AdminBuySell'
 import AdminGeneral from './pages/admin/AdminGeneral'
 import AdminServices from './pages/admin/AdminServices'
 import AdminBlog from './pages/admin/AdminBlog'
+import AdminCalculator from './pages/admin/AdminCalculator'
+import AdminResources from './pages/admin/AdminResources'
 
 // Blog imports
 import Blog from './pages/Blog'
@@ -42,6 +44,8 @@ function App() {
           <Route path="general" element={<AdminGeneral />} />
           <Route path="services" element={<AdminServices />} />
           <Route path="blog" element={<AdminBlog />} />
+          <Route path="calculator" element={<AdminCalculator />} />
+          <Route path="resources" element={<AdminResources />} />
         </Route>
 
         {/* Public Routes - With main Layout */}

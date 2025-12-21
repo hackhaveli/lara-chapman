@@ -11,7 +11,8 @@ import {
     Home,
     Menu,
     X,
-    FileText
+    FileText,
+    Calculator
 } from 'lucide-react';
 import { isAuthenticated, removeAuthToken } from '../../lib/api';
 
@@ -36,6 +37,8 @@ const AdminLayout: React.FC = () => {
         { path: '/admin/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
         { path: '/admin/neighborhoods', icon: Map, label: 'Neighborhoods' },
         { path: '/admin/blog', icon: FileText, label: 'Blog' },
+        { path: '/admin/calculator', icon: Calculator, label: 'Calculator' },
+        { path: '/admin/resources', icon: FileText, label: 'Resources' },
         { path: '/admin/buy-sell', icon: ShoppingCart, label: 'Buy & Sell Pages' },
         { path: '/admin/services', icon: Tag, label: 'Services' },
         { path: '/admin/general', icon: Settings, label: 'General Pages' },
@@ -60,7 +63,7 @@ const AdminLayout: React.FC = () => {
                             <Home size={20} className="text-white" />
                         </div>
                         {sidebarOpen && (
-                            <span className="text-white font-bold text-lg">Admin Panel</span>
+                            <span className="text-white font-bold text-lg">Lara Chapman</span>
                         )}
                     </motion.div>
                 </div>
@@ -115,7 +118,7 @@ const AdminLayout: React.FC = () => {
                     <div className="w-10 h-10 bg-[#E76F51] rounded-lg flex items-center justify-center">
                         <Home size={20} className="text-white" />
                     </div>
-                    <span className="text-white font-bold">Admin</span>
+                    <span className="text-white font-bold">Lara Chapman</span>
                 </div>
                 <button
                     onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

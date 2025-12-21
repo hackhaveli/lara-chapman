@@ -3,14 +3,7 @@ import { motion } from 'framer-motion'
 import { FileText, Download, User, Mail } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { usePageContent } from '../hooks/usePageContent'
-
-interface Resource {
-  id: string
-  title: string
-  description: string
-  file_url: string
-  created_at: string
-}
+import { getResources, Resource } from '../lib/api'
 
 const Resources = () => {
   const [resources, setResources] = useState<Resource[]>([])
@@ -31,62 +24,70 @@ const Resources = () => {
   const email = content?.contact?.email || 'lara@blissrealty.com'
   const phone = content?.contact?.phone || '(480) 555-0123'
 
-  // Default resources (buyer and seller guides)
-  // Default resources (buyer and seller guides)
-  const defaultResources: Resource[] = [
+  // Default fallback resources (only used if API fails)
+  const defaultResources: Partial<Resource>[] = [
     {
-      id: 'buyers-guide',
       title: content?.resources?.resource1Title || 'Your Guide to Buying a Home in the Phoenix Valley',
       description: content?.resources?.resource1Description || 'Process overview, financing options, timeline, and essential tips for home buyers.',
-      file_url: content?.resources?.resource1Url || "/Buyers_Guide.pdf",
-      created_at: new Date().toISOString()
+      fileUrl: content?.resources?.resource1Url || "/Buyers_Guide.pdf",
+      category: 'Buyer Guide' as any,
+      fileType: 'PDF' as any,
+      isActive: true,
+      requiresEmail: true,
     },
     {
-      id: 'sellers-guide',
       title: content?.resources?.resource2Title || 'Your Guide to Selling Your Phoenix Valley Home',
       description: content?.resources?.resource2Description || 'Pricing strategies, preparation, staging, marketing, and handling offers.',
-      file_url: content?.resources?.resource2Url || "/Sellers_Guide.pdf",
-      created_at: new Date().toISOString()
+      fileUrl: content?.resources?.resource2Url || "/Sellers_Guide.pdf",
+      category: 'Seller Guide' as any,
+      fileType: 'PDF' as any,
+      isActive: true,
+      requiresEmail: true,
     },
     {
-      id: 'staging-checklist',
       title: content?.resources?.resource3Title || 'Staging Checklist - Make Your Home Show-Ready',
       description: content?.resources?.resource3Description || 'Room-by-room preparation tips to maximize your home\'s appeal to potential buyers.',
-      file_url: content?.resources?.resource3Url || "/Staging_Checklist.pdf",
-      created_at: new Date().toISOString()
+      fileUrl: content?.resources?.resource3Url || "/Staging_Checklist.pdf",
+      category: 'Checklist' as any,
+      fileType: 'PDF' as any,
+      isActive: true,
+      requiresEmail: true,
     },
     {
-      id: 'monsoon-prep',
       title: content?.resources?.resource4Title || 'Monsoon Prep Tips - Protecting Your Phoenix Home',
       description: content?.resources?.resource4Description || 'Essential maintenance for roof/gutters, yard, AC, and flood safety during monsoon season.',
-      file_url: content?.resources?.resource4Url || "/Monsoon_Prep_Tips.pdf",
-      created_at: new Date().toISOString()
+      fileUrl: content?.resources?.resource4Url || "/Monsoon_Prep_Tips.pdf",
+      category: 'Safety' as any,
+      fileType: 'PDF' as any,
+      isActive: true,
+      requiresEmail: true,
     }
   ]
 
   useEffect(() => {
     const fetchResources = async () => {
       try {
-        const { data, error } = await supabase
-          .from('resources')
-          .select('*')
-          .order('created_at', { ascending: false })
+        const response = await getResources(true) // Get only active resources
 
-        if (error) throw error
-
-        // Combine default resources with those from the database
-        setResources([...defaultResources, ...(data || [])])
+        if (response.success && response.data && response.data.length > 0) {
+          // Use resources from database
+          setResources(response.data)
+        } else {
+          // Fall back to default resources if none in database
+          console.log('No resources in database, using defaults')
+          setResources(defaultResources as Resource[])
+        }
       } catch (error) {
         console.error('Error fetching resources:', error)
-        // Fallback to just the default resources if there's an error
-        setResources(defaultResources)
+        // Fall back to default resources on error
+        setResources(defaultResources as Resource[])
       } finally {
         setLoading(false)
       }
     }
 
     fetchResources()
-  }, [])
+  }, [content])
 
   const handleDownloadClick = (resource: Resource) => {
     setSelectedResource(resource)
@@ -98,26 +99,38 @@ const Resources = () => {
     setIsSubmitting(true)
 
     try {
-      // Save lead to database
-      const { error } = await supabase
-        .from('leads')
-        .insert([
-          {
-            name: formData.name,
-            email: formData.email,
-            message: `Downloaded resource: ${selectedResource?.title}`
-          }
-        ])
+      // Try to save lead to database (optional - won't fail download if this fails)
+      try {
+        const { error } = await supabase
+          .from('leads')
+          .insert([
+            {
+              name: formData.name,
+              email: formData.email,
+              message: `Downloaded resource: ${selectedResource?.title}`,
+              created_at: new Date().toISOString()
+            }
+          ])
 
-      if (error) throw error
+        if (error) {
+          console.warn('Could not save lead to database:', error)
+          // Continue anyway - download should still work
+        }
+      } catch (dbError) {
+        console.warn('Database error (continuing with download):', dbError)
+        // Continue anyway
+      }
 
-      // Simulate file download
-      const link = document.createElement('a')
-      link.href = selectedResource?.file_url || '#'
-      link.download = selectedResource?.title || 'resource'
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
+      // Download the file
+      if (selectedResource?.fileUrl) {
+        const link = document.createElement('a')
+        link.href = selectedResource.fileUrl
+        link.download = selectedResource.title || 'resource'
+        link.target = '_blank' // Open in new tab if direct download fails
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+      }
 
       // Reset form and close modal
       setFormData({ name: '', email: '' })
@@ -174,7 +187,7 @@ const Resources = () => {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {resources.map((resource, index) => (
             <motion.div
-              key={resource.id}
+              key={resource._id || index}
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}

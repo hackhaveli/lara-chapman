@@ -85,27 +85,29 @@ const Blog: React.FC = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center">
-                <div className="text-white text-xl">Loading...</div>
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="text-gray-700 text-xl">Loading...</div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
+        <div className="min-h-screen bg-gray-50">
             {/* Hero Section */}
-            <div className="relative py-20 px-6 overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-pink-600/20" />
+            <div className="relative py-20 px-6 overflow-hidden bg-gradient-to-br from-[#E76F51] to-[#F4A261]">
+                <div className="absolute inset-0 opacity-10">
+                    <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-20"></div>
+                </div>
                 <div className="max-w-7xl mx-auto relative z-10">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         className="text-center"
                     >
-                        <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                        <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white font-serif">
                             Real Estate Insights & Tips
                         </h1>
-                        <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+                        <p className="text-xl text-white/90 max-w-2xl mx-auto">
                             Stay informed with the latest market trends, home buying guides, and expert advice from Lara Chapman
                         </p>
                     </motion.div>
@@ -123,7 +125,7 @@ const Blog: React.FC = () => {
                             placeholder="Search articles..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-12 pr-4 py-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
+                            className="w-full pl-12 pr-4 py-4 bg-white border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#E76F51] focus:border-transparent shadow-sm"
                         />
                     </div>
 
@@ -133,10 +135,10 @@ const Blog: React.FC = () => {
                             <button
                                 key={category}
                                 onClick={() => setSelectedCategory(category === 'All' ? 'all' : category)}
-                                className={`px-6 py-2 rounded-full transition-all duration-200 ${(category === 'All' && selectedCategory === 'all') ||
+                                className={`px-6 py-2 rounded-full transition-all duration-200 font-medium ${(category === 'All' && selectedCategory === 'all') ||
                                     category === selectedCategory
-                                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white'
-                                    : 'bg-white/10 text-gray-300 hover:bg-white/20'
+                                    ? 'bg-[#E76F51] text-white shadow-md'
+                                    : 'bg-white text-gray-700 border border-gray-200 hover:border-[#E76F51] hover:text-[#E76F51]'
                                     }`}
                             >
                                 {category}
@@ -148,7 +150,7 @@ const Blog: React.FC = () => {
                 {/* Blog Posts Grid */}
                 {currentPosts.length === 0 ? (
                     <div className="text-center py-20">
-                        <p className="text-gray-400 text-xl">No posts found</p>
+                        <p className="text-gray-500 text-xl">No posts found</p>
                     </div>
                 ) : (
                     <>
@@ -161,7 +163,7 @@ const Blog: React.FC = () => {
                                     transition={{ delay: index * 0.1 }}
                                     onClick={() => handlePostClick(post.slug)}
                                     style={{ cursor: 'pointer' }}
-                                    className="group bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden hover:bg-white/10 hover:border-white/20 transition-all duration-300 hover:scale-105"
+                                    className="group bg-white rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-100"
                                 >
                                     {/* Featured Image */}
                                     <div className="relative h-56 overflow-hidden">
@@ -171,7 +173,7 @@ const Blog: React.FC = () => {
                                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                         />
                                         <div className="absolute top-4 left-4">
-                                            <span className="px-4 py-1 bg-purple-600 text-white text-sm rounded-full">
+                                            <span className="px-4 py-1 bg-[#E76F51] text-white text-sm rounded-full font-semibold shadow-md">
                                                 {post.category}
                                             </span>
                                         </div>
@@ -180,7 +182,7 @@ const Blog: React.FC = () => {
                                     {/* Content */}
                                     <div className="p-6">
                                         {/* Meta Info */}
-                                        <div className="flex items-center gap-4 text-sm text-gray-400 mb-3">
+                                        <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
                                             <div className="flex items-center gap-1">
                                                 <Calendar className="w-4 h-4" />
                                                 <span>
@@ -198,12 +200,12 @@ const Blog: React.FC = () => {
                                         </div>
 
                                         {/* Title */}
-                                        <h2 className="text-xl font-bold text-white mb-3 group-hover:text-purple-400 transition-colors line-clamp-2">
+                                        <h2 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-[#E76F51] transition-colors line-clamp-2">
                                             {post.title}
                                         </h2>
 
                                         {/* Excerpt */}
-                                        <p className="text-gray-300 mb-4 line-clamp-3">
+                                        <p className="text-gray-600 mb-4 line-clamp-3">
                                             {post.excerpt}
                                         </p>
 
@@ -213,7 +215,7 @@ const Blog: React.FC = () => {
                                                 {post.tags.slice(0, 3).map((tag, idx) => (
                                                     <span
                                                         key={idx}
-                                                        className="px-2 py-1 bg-white/5 text-gray-400 text-xs rounded flex items-center gap-1"
+                                                        className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded flex items-center gap-1"
                                                     >
                                                         <Tag className="w-3 h-3" />
                                                         {tag}
@@ -223,16 +225,16 @@ const Blog: React.FC = () => {
                                         )}
 
                                         {/* Author */}
-                                        <div className="flex items-center gap-3 pt-4 border-t border-white/10">
+                                        <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
                                             <img
                                                 src={post.author.image}
                                                 alt={post.author.name}
                                                 className="w-10 h-10 rounded-full object-cover"
                                             />
                                             <div className="flex-1">
-                                                <p className="text-white font-medium text-sm">{post.author.name}</p>
+                                                <p className="text-gray-900 font-medium text-sm">{post.author.name}</p>
                                             </div>
-                                            <ArrowRight className="w-5 h-5 text-purple-400 group-hover:translate-x-2 transition-transform" />
+                                            <ArrowRight className="w-5 h-5 text-[#E76F51] group-hover:translate-x-2 transition-transform" />
                                         </div>
                                     </div>
                                 </motion.article>
@@ -245,7 +247,7 @@ const Blog: React.FC = () => {
                                 <button
                                     onClick={() => handlePageChange(currentPage - 1)}
                                     disabled={currentPage === 1}
-                                    className="px-4 py-2 bg-white/10 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/20 transition-colors"
+                                    className="px-4 py-2 bg-white border border-gray-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors text-gray-700 font-medium"
                                 >
                                     Previous
                                 </button>
@@ -254,9 +256,9 @@ const Blog: React.FC = () => {
                                     <button
                                         key={page}
                                         onClick={() => handlePageChange(page)}
-                                        className={`px-4 py-2 rounded-lg transition-all ${currentPage === page
-                                            ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white'
-                                            : 'bg-white/10 text-gray-300 hover:bg-white/20'
+                                        className={`px-4 py-2 rounded-lg transition-all font-medium ${currentPage === page
+                                            ? 'bg-[#E76F51] text-white shadow-md'
+                                            : 'bg-white text-gray-700 border border-gray-200 hover:border-[#E76F51] hover:text-[#E76F51]'
                                             }`}
                                     >
                                         {page}
@@ -266,7 +268,7 @@ const Blog: React.FC = () => {
                                 <button
                                     onClick={() => handlePageChange(currentPage + 1)}
                                     disabled={currentPage === totalPages}
-                                    className="px-4 py-2 bg-white/10 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/20 transition-colors"
+                                    className="px-4 py-2 bg-white border border-gray-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors text-gray-700 font-medium"
                                 >
                                     Next
                                 </button>

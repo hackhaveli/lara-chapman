@@ -48,6 +48,8 @@ app.post('/api/auth/login', verifyLogin);
 app.use('/api/content', require('./routes/content'));
 app.use('/api/neighborhoods', require('./routes/neighborhoods'));
 app.use('/api/blog', require('./routes/blog'));
+app.use('/api/calculator', require('./routes/calculator'));
+app.use('/api/resources', require('./routes/resources'));
 
 // 404 handler
 app.use((req, res) => {

@@ -78,6 +78,8 @@ const AdminDashboard: React.FC = () => {
 
     const quickLinks = [
         { label: 'Add New Neighborhood', path: '/admin/neighborhoods/new', icon: Map },
+        { label: 'Calculator Settings', path: '/admin/calculator', icon: Settings },
+        { label: 'Manage Resources', path: '/admin/resources', icon: FileText },
         { label: 'Manage Services', path: '/admin/services', icon: Settings },
         { label: 'Edit Buy Page', path: '/admin/buy-sell', icon: FileText },
         { label: 'Edit Sell Page', path: '/admin/buy-sell', icon: FileText },

@@ -567,6 +567,218 @@ export const getBlogTags = async (): Promise<ApiResponse<string[]>> => {
     }
 };
 
+// ============ CALCULATOR API ============
+
+export interface CalculatorSettings {
+    _id?: string;
+    paymentCalculator: {
+        defaultHomePrice: number;
+        homePriceMin: number;
+        homePriceMax: number;
+        defaultDownPayment: number;
+        downPaymentMin: number;
+        downPaymentMax: number;
+        defaultLoanTerm: number;
+        loanTermOptions: number[];
+        defaultInterestRate: number;
+        interestRateMin: number;
+        interestRateMax: number;
+        interestRateStep: number;
+        defaultPropertyTax: number;
+        defaultHomeInsurance: number;
+        defaultHoaFees: number;
+        defaultPmi: number;
+        pmiMin: number;
+        pmiMax: number;
+        pmiStep: number;
+    };
+    affordabilityCalculator: {
+        defaultAnnualIncome: number;
+        defaultMonthlyDebt: number;
+        defaultDownPayment: number;
+        defaultInterestRate: number;
+        interestRateMin: number;
+        interestRateMax: number;
+        interestRateStep: number;
+        defaultLoanTerm: number;
+        loanTermOptions: number[];
+        defaultDtiRatio: number;
+        dtiRatioMin: number;
+        dtiRatioMax: number;
+        dtiRatioStep: number;
+    };
+    displaySettings: {
+        showPaymentCalculator: boolean;
+        showAffordabilityCalculator: boolean;
+        showRefinanceCalculator: boolean;
+        paymentTabLabel: string;
+        affordabilityTabLabel: string;
+        refinanceTabLabel: string;
+    };
+}
+
+// Get calculator settings
+export const getCalculatorSettings = async (): Promise<ApiResponse<CalculatorSettings>> => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/calculator/settings`, {
+            headers: createHeaders(),
+        });
+        return await response.json();
+    } catch (error) {
+        return { success: false, message: 'Failed to fetch calculator settings' };
+    }
+};
+
+// Update calculator settings
+export const updateCalculatorSettings = async (settings: Partial<CalculatorSettings>): Promise<ApiResponse<CalculatorSettings>> => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/calculator/settings`, {
+            method: 'PUT',
+            headers: createHeaders(true),
+            body: JSON.stringify(settings),
+        });
+        return await response.json();
+    } catch (error) {
+        return { success: false, message: 'Failed to update calculator settings' };
+    }
+};
+
+// Reset calculator settings to defaults
+export const resetCalculatorSettings = async (): Promise<ApiResponse<CalculatorSettings>> => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/calculator/settings/reset`, {
+            method: 'POST',
+            headers: createHeaders(true),
+        });
+        return await response.json();
+    } catch (error) {
+        return { success: false, message: 'Failed to reset calculator settings' };
+    }
+};
+
+// ============ RESOURCES API ============
+
+export interface Resource {
+    _id: string;
+    title: string;
+    description: string;
+    fileUrl: string;
+    fileType: 'PDF' | 'DOC' | 'DOCX' | 'XLS' | 'XLSX' | 'ZIP' | 'Other';
+    category: 'Buyer Guide' | 'Seller Guide' | 'Checklist' | 'Market Report' | 'Safety' | 'General' | 'Other';
+    isActive: boolean;
+    downloadCount: number;
+    order: number;
+    requiresEmail: boolean;
+    ghlFunnelUrl?: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface ResourceInput {
+    title: string;
+    description: string;
+    fileUrl: string;
+    fileType?: 'PDF' | 'DOC' | 'DOCX' | 'XLS' | 'XLSX' | 'ZIP' | 'Other';
+    category?: 'Buyer Guide' | 'Seller Guide' | 'Checklist' | 'Market Report' | 'Safety' | 'General' | 'Other';
+    isActive?: boolean;
+    order?: number;
+    requiresEmail?: boolean;
+    ghlFunnelUrl?: string;
+}
+
+// Get all resources
+export const getResources = async (activeOnly: boolean = true): Promise<ApiResponse<Resource[]>> => {
+    try {
+        const url = `${API_BASE_URL}/resources?activeOnly=${activeOnly}`;
+        const response = await fetch(url, {
+            headers: createHeaders(),
+        });
+        return await response.json();
+    } catch (error) {
+        return { success: false, message: 'Failed to fetch resources' };
+    }
+};
+
+// Get single resource
+export const getResourceById = async (id: string): Promise<ApiResponse<Resource>> => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/resources/${id}`, {
+            headers: createHeaders(),
+        });
+        return await response.json();
+    } catch (error) {
+        return { success: false, message: 'Failed to fetch resource' };
+    }
+};
+
+// Create resource
+export const createResource = async (data: ResourceInput): Promise<ApiResponse<Resource>> => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/resources`, {
+            method: 'POST',
+            headers: createHeaders(true),
+            body: JSON.stringify(data),
+        });
+        return await response.json();
+    } catch (error) {
+        return { success: false, message: 'Failed to create resource' };
+    }
+};
+
+// Update resource
+export const updateResource = async (id: string, data: Partial<ResourceInput>): Promise<ApiResponse<Resource>> => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/resources/${id}`, {
+            method: 'PUT',
+            headers: createHeaders(true),
+            body: JSON.stringify(data),
+        });
+        return await response.json();
+    } catch (error) {
+        return { success: false, message: 'Failed to update resource' };
+    }
+};
+
+// Delete resource
+export const deleteResource = async (id: string): Promise<ApiResponse<null>> => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/resources/${id}`, {
+            method: 'DELETE',
+            headers: createHeaders(true),
+        });
+        return await response.json();
+    } catch (error) {
+        return { success: false, message: 'Failed to delete resource' };
+    }
+};
+
+// Track resource download
+export const trackResourceDownload = async (id: string): Promise<ApiResponse<Resource>> => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/resources/${id}/download`, {
+            method: 'POST',
+            headers: createHeaders(),
+        });
+        return await response.json();
+    } catch (error) {
+        return { success: false, message: 'Failed to track download' };
+    }
+};
+
+// Reorder resources
+export const reorderResources = async (resources: Array<{ id: string; order: number }>): Promise<ApiResponse<null>> => {
+    try {
+        const response = await fetch(`${API_BASE_URL}/resources/reorder`, {
+            method: 'POST',
+            headers: createHeaders(true),
+            body: JSON.stringify({ resources }),
+        });
+        return await response.json();
+    } catch (error) {
+        return { success: false, message: 'Failed to reorder resources' };
+    }
+};
+
 export default {
     login,
     setAuthToken,
