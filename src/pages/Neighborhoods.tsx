@@ -20,7 +20,7 @@ interface Neighborhood {
   didYouKnow: string
   schools: string
   summary: Array<{ feature: string, description: string }>
-  ctaButtons: string[]
+  ctaButtons: Array<{ text: string, url: string }>
 }
 
 // Sample neighborhood data matching the text file content
@@ -51,8 +51,8 @@ const NEIGHBORHOODS: Neighborhood[] = [
       { feature: 'Affordability', description: 'Lower home prices than many other areas in the Valley, with diverse housing options.' }
     ],
     ctaButtons: [
-      'View the Mesa Market Report',
-      'Search Homes in Mesa'
+      { text: 'View the Mesa Market Report', url: '#' },
+      { text: 'Search Homes in Mesa', url: 'https://search.blissrealtyinvestment.com/idx/search/advanced?agentHeaderID=15891149' }
     ]
   },
   {
@@ -79,8 +79,8 @@ const NEIGHBORHOODS: Neighborhood[] = [
       { feature: 'Lifestyle', description: 'Mix of suburban comfort and lively downtown entertainment.' }
     ],
     ctaButtons: [
-      'View the Gilbert Market Report',
-      'Search Homes in Gilbert'
+      { text: 'View the Gilbert Market Report', url: '#' },
+      { text: 'Search Homes in Gilbert', url: 'https://search.blissrealtyinvestment.com/idx/search/advanced?agentHeaderID=15891149' }
     ]
   },
   {
@@ -111,8 +111,8 @@ const NEIGHBORHOODS: Neighborhood[] = [
       { feature: 'Lifestyle Mix', description: 'Offers everything from outlet shopping to dining and entertainment hubs.' }
     ],
     ctaButtons: [
-      'View the South Tempe/Chandler/Ahwatukee Market Report',
-      'Search Homes in South Tempe/Chandler/Ahwatukee'
+      { text: 'View the South Tempe/Chandler/Ahwatukee Market Report', url: '#' },
+      { text: 'Search Homes in South Tempe/Chandler/Ahwatukee', url: 'https://search.blissrealtyinvestment.com/idx/search/advanced?agentHeaderID=15891149' }
     ]
   },
   {
@@ -141,8 +141,8 @@ const NEIGHBORHOODS: Neighborhood[] = [
       { feature: 'Central Hub', description: 'With four major freeways and nearby Sky Harbor Airport, the area is highly accessible. Light rail adds convenient transit across the East Valley and into downtown Phoenix.' }
     ],
     ctaButtons: [
-      'View the North Tempe / South Scottsdale Market Report',
-      'Search Homes in North Tempe / South Scottsdale'
+      { text: 'View the North Tempe / South Scottsdale Market Report', url: '#' },
+      { text: 'Search Homes in North Tempe / South Scottsdale', url: 'https://search.blissrealtyinvestment.com/idx/search/advanced?agentHeaderID=15891149' }
     ]
   },
   {
@@ -171,8 +171,8 @@ const NEIGHBORHOODS: Neighborhood[] = [
       { feature: 'Lifestyle Options', description: 'Town of PV is luxury-driven, while PV Village balances upscale living with everyday conveniences.' }
     ],
     ctaButtons: [
-      'View the Paradise Valley Market Report',
-      'Search Homes in Paradise Valley'
+      { text: 'View the Paradise Valley Market Report', url: '#' },
+      { text: 'Search Homes in Paradise Valley', url: 'https://search.blissrealtyinvestment.com/idx/search/advanced?agentHeaderID=15891149' }
     ]
   },
   {
@@ -201,8 +201,8 @@ const NEIGHBORHOODS: Neighborhood[] = [
       { feature: 'Upscale Choices', description: 'Housing and amenities are tailored to high-end tastes and lifestyles.' }
     ],
     ctaButtons: [
-      'View the North Scottsdale Market Report',
-      'Search Homes in North Scottsdale'
+      { text: 'View the North Scottsdale Market Report', url: '#' },
+      { text: 'Search Homes in North Scottsdale', url: 'https://search.blissrealtyinvestment.com/idx/search/advanced?agentHeaderID=15891149' }
     ]
   },
   {
@@ -229,8 +229,8 @@ const NEIGHBORHOODS: Neighborhood[] = [
       { feature: 'Cultural Access', description: 'Proximity to museums, theaters, and downtown adds depth beyond residential life.' }
     ],
     ctaButtons: [
-      'View the Encanto Village Market Report',
-      'Search Homes in the Encanto Village Area of Phoenix'
+      { text: 'View the Encanto Village Market Report', url: '#' },
+      { text: 'Search Homes in the Encanto Village Area of Phoenix', url: 'https://search.blissrealtyinvestment.com/idx/search/advanced?agentHeaderID=15891149' }
     ]
   },
   {
@@ -257,8 +257,8 @@ const NEIGHBORHOODS: Neighborhood[] = [
       { feature: 'Local Flavor', description: 'This community values diversity, individualism, and community support. It\'s fun and funky with quirky retail, strong small businesses, and vibrant nightlife.' }
     ],
     ctaButtons: [
-      'View the Uptown Market Report',
-      'Search Homes in Uptown Phoenix'
+      { text: 'View the Uptown Market Report', url: '#' },
+      { text: 'Search Homes in Uptown Phoenix', url: 'https://search.blissrealtyinvestment.com/idx/search/advanced?agentHeaderID=15891149' }
     ]
   },
   {
@@ -287,8 +287,8 @@ const NEIGHBORHOODS: Neighborhood[] = [
       { feature: 'Architectural Variety', description: 'From citrus-grove ranch homes and historic mansions to sleek new luxury builds, housing reflects both heritage and modern design.' }
     ],
     ctaButtons: [
-      'View the Biltmore Corridor / Arcadia Market Report',
-      'Search Homes in the Biltmore Corridor / Arcadia Areas of Phoenix'
+      { text: 'View the Biltmore Corridor / Arcadia Market Report', url: '#' },
+      { text: 'Search Homes in the Biltmore Corridor / Arcadia Areas of Phoenix', url: 'https://search.blissrealtyinvestment.com/idx/search/advanced?agentHeaderID=15891149' }
     ]
   }
 ];
@@ -685,22 +685,22 @@ const NeighborhoodDetail = () => {
               </div>
 
               <div className="mt-8 space-y-4">
-                {neighborhood.ctaButtons.map((button, index) => (
-                  <a
-                    key={index}
-                    href="#"
-                    className={`block w-full text-center px-4 py-3 rounded-lg font-medium transition-colors ${index === 0
-                      ? 'bg-blue-600 text-white hover:bg-blue-700'
-                      : 'border border-gray-300 text-gray-700 hover:bg-gray-50'
-                      }`}
-                    onClick={(e) => {
-                      e.preventDefault()
-                      // Handle button click
-                    }}
-                  >
-                    {button}
-                  </a>
-                ))}
+                {neighborhood.ctaButtons.map((button, index) => {
+                  const isExternal = button.url.startsWith('http');
+                  return (
+                    <a
+                      key={index}
+                      href={button.url}
+                      {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                      className={`block w-full text-center px-4 py-3 rounded-lg font-medium transition-colors ${index === 0
+                          ? 'bg-blue-600 text-white hover:bg-blue-700'
+                          : 'border border-gray-300 text-gray-700 hover:bg-gray-50'
+                        }`}
+                    >
+                      {button.text}
+                    </a>
+                  );
+                })}
               </div>
             </div>
           </div>

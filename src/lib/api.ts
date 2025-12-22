@@ -300,7 +300,7 @@ export interface Neighborhood {
     didYouKnow: string;
     schools: string;
     summary: Array<{ feature: string; description: string }>;
-    ctaButtons: string[];
+    ctaButtons: Array<{ text: string; url: string }>;
     isActive: boolean;
     createdAt: string;
     updatedAt: string;
@@ -324,7 +324,7 @@ export interface NeighborhoodInput {
     didYouKnow?: string;
     schools?: string;
     summary?: Array<{ feature: string; description: string }>;
-    ctaButtons?: string[];
+    ctaButtons?: Array<{ text: string; url: string }>;
     isActive?: boolean;
 }
 

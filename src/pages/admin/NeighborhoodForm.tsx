@@ -44,7 +44,10 @@ const NeighborhoodForm: React.FC = () => {
         didYouKnow: '',
         schools: '',
         summary: [{ feature: '', description: '' }],
-        ctaButtons: ['', ''],
+        ctaButtons: [
+            { text: '', url: '' },
+            { text: '', url: '' }
+        ],
         isActive: true
     });
 
@@ -60,6 +63,26 @@ const NeighborhoodForm: React.FC = () => {
             if (response.success && response.data) {
                 const neighborhood = response.data.find(n => n._id === id);
                 if (neighborhood) {
+                    // Handle both old and new CTA button formats
+                    let ctaButtons: Array<{ text: string; url: string }> = [
+                        { text: '', url: '' },
+                        { text: '', url: '' }
+                    ];
+
+                    if (neighborhood.ctaButtons && neighborhood.ctaButtons.length > 0) {
+                        // Check if it's the old string format or new object format
+                        if (typeof neighborhood.ctaButtons[0] === 'string') {
+                            // Old format: convert strings to objects
+                            ctaButtons = (neighborhood.ctaButtons as any).map((text: string) => ({
+                                text,
+                                url: ''
+                            }));
+                        } else {
+                            // New format: use as-is
+                            ctaButtons = neighborhood.ctaButtons as Array<{ text: string; url: string }>;
+                        }
+                    }
+
                     setFormData({
                         name: neighborhood.name,
                         slug: neighborhood.slug,
@@ -72,7 +95,7 @@ const NeighborhoodForm: React.FC = () => {
                         didYouKnow: neighborhood.didYouKnow || '',
                         schools: neighborhood.schools || '',
                         summary: neighborhood.summary?.length ? neighborhood.summary : [{ feature: '', description: '' }],
-                        ctaButtons: neighborhood.ctaButtons?.length ? neighborhood.ctaButtons : ['', ''],
+                        ctaButtons,
                         isActive: neighborhood.isActive
                     });
                 }
@@ -161,10 +184,10 @@ const NeighborhoodForm: React.FC = () => {
         }));
     };
 
-    const handleCtaChange = (index: number, value: string) => {
+    const handleCtaChange = (index: number, field: 'text' | 'url', value: string) => {
         setFormData(prev => {
-            const ctaButtons = [...(prev.ctaButtons || [])];
-            ctaButtons[index] = value;
+            const ctaButtons = [...(prev.ctaButtons || [])] as Array<{ text: string; url: string }>;
+            ctaButtons[index] = { ...ctaButtons[index], [field]: value };
             return { ...prev, ctaButtons };
         });
     };
@@ -178,7 +201,7 @@ const NeighborhoodForm: React.FC = () => {
             ...formData,
             highlights: formData.highlights?.filter(h => h.trim()) || [],
             summary: formData.summary?.filter(s => s.feature.trim() || s.description.trim()) || [],
-            ctaButtons: formData.ctaButtons?.filter(c => c.trim()) || []
+            ctaButtons: formData.ctaButtons?.filter(c => c.text.trim() || c.url.trim()) || []
         };
 
         try {
@@ -520,31 +543,49 @@ const NeighborhoodForm: React.FC = () => {
                 <div className="bg-white rounded-2xl p-6 shadow-sm">
                     <h2 className="text-lg font-bold text-slate-800 mb-4">CTA Buttons</h2>
 
-                    <div className="grid md:grid-cols-2 gap-4">
+                    <div className="space-y-6">
                         <div>
                             <label className="block text-sm font-medium text-slate-700 mb-2">
                                 Primary CTA
                             </label>
-                            <input
-                                type="text"
-                                value={formData.ctaButtons?.[0] || ''}
-                                onChange={(e) => handleCtaChange(0, e.target.value)}
-                                className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E76F51]"
-                                placeholder="e.g., View Market Report"
-                            />
+                            <div className="space-y-2">
+                                <input
+                                    type="text"
+                                    value={formData.ctaButtons?.[0]?.text || ''}
+                                    onChange={(e) => handleCtaChange(0, 'text', e.target.value)}
+                                    className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E76F51]"
+                                    placeholder="e.g., View Market Report"
+                                />
+                                <input
+                                    type="text"
+                                    value={formData.ctaButtons?.[0]?.url || ''}
+                                    onChange={(e) => handleCtaChange(0, 'url', e.target.value)}
+                                    className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E76F51]"
+                                    placeholder="e.g., /reports/neighborhood-name or https://example.com"
+                                />
+                            </div>
                         </div>
 
                         <div>
                             <label className="block text-sm font-medium text-slate-700 mb-2">
                                 Secondary CTA
                             </label>
-                            <input
-                                type="text"
-                                value={formData.ctaButtons?.[1] || ''}
-                                onChange={(e) => handleCtaChange(1, e.target.value)}
-                                className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E76F51]"
-                                placeholder="e.g., Search Homes"
-                            />
+                            <div className="space-y-2">
+                                <input
+                                    type="text"
+                                    value={formData.ctaButtons?.[1]?.text || ''}
+                                    onChange={(e) => handleCtaChange(1, 'text', e.target.value)}
+                                    className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E76F51]"
+                                    placeholder="e.g., Search Homes"
+                                />
+                                <input
+                                    type="text"
+                                    value={formData.ctaButtons?.[1]?.url || ''}
+                                    onChange={(e) => handleCtaChange(1, 'url', e.target.value)}
+                                    className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#E76F51]"
+                                    placeholder="e.g., https://search.example.com"
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
