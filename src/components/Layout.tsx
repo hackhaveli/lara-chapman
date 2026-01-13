@@ -78,7 +78,7 @@ const Navigation = () => {
 
   return (
     <motion.nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 overflow-x-hidden ${isScrolled
         ? 'bg-[#FAF9F6] shadow-md border-b border-[#E76F51]/20'
         : 'bg-[#FAF9F6]/95 backdrop-blur-sm'
         }`}
@@ -86,14 +86,14 @@ const Navigation = () => {
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="flex items-center justify-between h-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="flex items-center justify-between h-16 gap-2">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <div className="text-2xl font-bold font-serif text-[#E76F51]">
+          <Link to="/" className="flex items-center space-x-1 sm:space-x-2 min-w-0 flex-shrink">
+            <div className="text-xl sm:text-2xl font-bold font-serif text-[#E76F51] whitespace-nowrap">
               {logoText}
             </div>
-            <div className="text-sm text-[#555555] font-medium">
+            <div className="text-xs sm:text-sm text-[#555555] font-medium whitespace-nowrap">
               {logoSubtext}
             </div>
           </Link>
@@ -129,7 +129,7 @@ const Navigation = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden p-2 rounded-md text-[#333333] hover:text-[#E76F51] transition-colors"
+            className="lg:hidden p-2 rounded-md text-[#333333] hover:text-[#E76F51] transition-colors flex-shrink-0"
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
